@@ -1,6 +1,14 @@
 //**********************************************************************************
 // Declare variables
 
+
+let x, y, z, a, b, n, m, u, v;
+let scalar = 50;
+let scalarZ = 20;
+let iteration = .3;
+let counter = 0;
+let gridSize = 15;
+
 // GUI
 let gui;
 
@@ -9,7 +17,7 @@ var bgColor = [0, 25, 50];         // Dark blue color
 var ptSize = 1;
 var ptColor = [255, 255, 255];
 var zoom = 0;
-var rotationSpeed = 0.1;
+var variation = 0;
 
 // Setup of pseudonyms for ctrl panel labels
 let geoSizeMultiple;
@@ -18,8 +26,6 @@ let geoSizeMultiple;
 // Color declaration
 let blackSolid, whiteSolid, redSolid, greenSolid, blueSolid;
 let whiteGrad10, whiteGrad50;
-
-let scalar = 350;
 
 //
 function preload(){
@@ -40,6 +46,7 @@ function setup(){
     greenSolid = color(0, 255, 0);
     blueSolid = color(0, 0, 255);
 
+
     // Initialize GUI
     // Parameters include: (label (which can be wrapped text), x-pos from left,
     // y-pos from top)
@@ -50,13 +57,13 @@ function setup(){
     sliderRange(1, 10, 1);
     gui.addGlobals('ptSize', 'ptColor');
 
+    // set speed range
+    sliderRange(0.0, 100.0, 0.1);
+    gui.addGlobals('variation');
+
     // set geoSizeMultiple range
     sliderRange(-150, 10, 1);
     gui.addGlobals('zoom');
-
-    // set speed range
-    sliderRange(0.0, 0.5, 0.01);
-    gui.addGlobals('rotationSpeed');
 
     // set bgColor
     sliderRange(0, 255, 1);
@@ -67,20 +74,13 @@ function setup(){
 //**********************************************************************************
 // Draw function
 function draw() {
-
     background(bgColor);
-
     push();
-    translate(0, 0, zoom);
+    //translate(0, 0, zoom);
 
-    noFill();
-    stroke(ptColor);
-    strokeWeight(ptSize);
-
-    for(let r = 0; r < cityLoc.length; r++){
-        point(cityLoc[r].x * scalar, cityLoc[r].y * scalar, cityLoc[r].z * scalar);
-        //print(r + ": " + cityLoc[r].x);
-    }
+    translate(-windowWidth / 4, -windowHeight/4, zoom);
+    rotateX(radians(45));
+    chladniPat();
     pop();
 }
 
@@ -89,3 +89,40 @@ function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 
+function chladniPat(){
+    push();
+    translate(0, 0, 0);
+    noFill();
+    stroke(ptColor);
+    strokeWeight(ptSize);
+    for(u=0; u < gridSize ; u+=iteration){
+        for(v=0; v < gridSize; v+=iteration){
+            // Static Values
+            /**
+             a = 4.14;
+             b = 7.96;
+             m = a;
+             n = b;
+             **/
+
+            // Dynamic values
+            a = map(variation, 0, 100, 4, 8);
+            b = map(variation, 0, 100, 4, 8);
+            m = map(variation, 0, 100, 4, 8);
+            n = map(variation, 0, 100, 4, 8);
+
+            x = u * scalar;
+            y = v * scalar;
+            z = a * sin(PI * n * x) * sin(PI * m * y) + b * sin(PI * m * x) * sin(PI * n * y) * scalarZ;
+            point(x, y, z);
+        }
+    }
+    pop();
+
+    if(counter == 100){
+        counter = 0;
+    }
+    else{
+        counter+=iteration;
+    }
+}
