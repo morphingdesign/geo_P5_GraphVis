@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="cb68fc14-243d-468a-944f-b56852ef9015" name="ftp.morphingdesign.com" url="http://ftp.morphingdesign.com">
+        <fileTransfer host="ftp.morphingdesign.com" port="21" rootFolder="/public_html/process/sandbox003">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
