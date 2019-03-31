@@ -7,7 +7,12 @@ let scalarZ = 20;
 let counter = 0;
 let gridSize = 15;
 
-let gui;                // GUI element from p5 GUI library
+// GUI element from p5 GUI library
+let guiStyle;           // GUI for managing geo styles (color, point size, etc.)
+let guiGeo;             // GUI for managing geo parameters (density, variation, etc.)
+let guiViewport;        // GUI for managing viewport controls (zoom, rotate, etc.)
+
+// In-file classes for geometry
 let backGrid;           // Background grid, from Grid class
 let chladniGeo;         // Math geometry, from MathGeo class
 
@@ -37,9 +42,7 @@ let whiteGrad10, whiteGrad50;
 let geoX, geoY, geoXSize, geoYSize;
 let overGeo = false;        // Bool for mouse over geo
 let overLocked = false;     // Bool to retain mouse pos over geo
-let rotOffset = 0.0;
-let tiltOffset = 0.0;
-let dragSpeed = 5.0;
+let dragSpeed = 5.0;        // Multiplier for mouse drag motion
 
 // Display variables
 // This has to be included in the Setup Canvas & windowResized() function
@@ -73,43 +76,49 @@ function setup(){
     chladniGeo = new MathGeo();
 
     //******************************************************************************
-    // Initialize GUI
-    // Parameters include: (label (which can be wrapped text), x-pos from left,
-    // y-pos from top)
-    gui = createGui('Control Panel (Double-click menu to expand/collapse', 20, 20);
+    // Initialize GUI for style controls
+    // Parameters include: (label (which can be wrapped text), x-pos from left, y-pos from top)
+    guiStyle = createGui('Style Control Panel (Double-click menu to expand/collapse', 20, 20);
 
     // Set ptSize range
     // Include ptColor to adjust point color
     sliderRange(1, 10, 1);
-    gui.addGlobals('ptSize', 'ptColor');
-
-    // Set point density
-    sliderRange(0.15, 0.5, 0.01);
-    gui.addGlobals('density');
-
-    // Set speed range
-    sliderRange(0.0, 100.0, 0.1);
-    gui.addGlobals('variation');
-
-    // Set zoom, or z-depth
-    sliderRange(-1000, 500, 1);
-    gui.addGlobals('zoom');
-
-    // Set tilt, or rotate-x angle, in degrees
-    sliderRange(0, 90, 1);
-    gui.addGlobals('tilt');
-
-    // Set view rotation, or rotate-z angle, in degrees
-    sliderRange(0, 360, 1);
-    gui.addGlobals('rotation');
+    guiStyle.addGlobals('ptSize', 'ptColor');
 
     // Set bgColor
     sliderRange(0, 255, 1);
-    gui.addGlobals('bgColor');
+    guiStyle.addGlobals('bgColor');
+
+    //******************************************************************************
+    // Initialize GUI for geometry parameter controls
+    guiGeo = createGui('Geometry Control Panel (Double-click menu to expand/collapse', 230, 20);
+
+    // Set point density
+    sliderRange(0.15, 0.5, 0.01);
+    guiGeo.addGlobals('density');
+
+    // Set speed range
+    sliderRange(0.0, 100.0, 0.1);
+    guiGeo.addGlobals('variation');
 
     // Toggle animation on/off
-    gui.addGlobals('animation', 'grid');
+    guiGeo.addGlobals('animation', 'grid');
 
+    //******************************************************************************
+    // Initialize GUI for viewport controls
+    guiViewport = createGui('Viewport Control Panel (Double-click menu to expand/collapse', 440, 20);
+
+    // Set zoom, or z-depth
+    sliderRange(-1000, 500, 1);
+    guiViewport.addGlobals('zoom');
+
+    // Set tilt, or rotate-x angle, in degrees
+    sliderRange(0, 90, 1);
+    guiViewport.addGlobals('tilt');
+
+    // Set view rotation, or rotate-z angle, in degrees
+    sliderRange(0, 360, 1);
+    guiViewport.addGlobals('rotation');
 }
 
 //##################################################################################
