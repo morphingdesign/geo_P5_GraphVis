@@ -6,9 +6,9 @@ let scalarZ = 20;
 let counter = 0;
 let gridSize = 15;
 
-let gui;            // GUI element from p5 GUI library
-let backGrid;       // Background grid, from Grid class
-let chladniGeo;     // Math geometry, from MathGeo class
+let gui;                // GUI element from p5 GUI library
+let backGrid;           // Background grid, from Grid class
+let chladniGeo;         // Math geometry, from MathGeo class
 
 // GUI library requires the use of 'var' to define variables, and not 'let'
 var bgColor = [0, 25, 50];         // Dark blue color
@@ -20,7 +20,7 @@ var tilt = 45;          // Linked to angle variable
 var rotation = 0;       // Linked to rotAngle variable
 var variation = 0;
 var animation = true;   // Boolean to toggle anim in gui
-var grid = true;   // Boolean to toggle background grid in gui
+var grid = true;        // Boolean to toggle background grid in gui
 
 // Setup of pseudonyms for ctrl panel labels
 let iteration;          // Linked to density variable in gui
@@ -33,10 +33,15 @@ let whiteGrad10, whiteGrad50;
 
 // Mouse controls
 let geoX, geoY, geoXSize, geoYSize;
-let overGeo = false;    // Bool for mouse over geo
+let overGeo = false;        // Bool for mouse over geo
 let overLocked = false;     // Bool to retain mouse pos over geo
 let rotOffset = 0.0;
 let tiltOffset = 0.0;
+let dragSpeed = 5.0;
+
+// Display variables
+// This has to be included in the Setup Canvas & windowResized() function
+let buffer = 20;            // Compensates for bottom and right edges of window
 
 //
 function preload(){
@@ -47,7 +52,7 @@ function preload(){
 // Setup function
 function setup(){
     // Setup canvas
-    createCanvas(windowWidth, windowHeight, WEBGL);
+    createCanvas(windowWidth - buffer, windowHeight - buffer, WEBGL);
     // Color initialization
     whiteSolid = color(255, 255, 255);
     whiteGrad10 = color(255, 255, 255, 10);
@@ -155,10 +160,6 @@ function draw() {
     }
     pop();
 
-
-    //mousePressed();
-    //mouseDragged();
-    //mouseReleased();
 }
 
 //**********************************************************************************
@@ -168,7 +169,7 @@ function draw() {
 //**********************************************************************************
 // Dynamically adjust the canvas to the window
 function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
+    resizeCanvas(windowWidth - buffer, windowHeight - buffer);
 }
 
 function mousePressed(){
@@ -183,12 +184,30 @@ function mousePressed(){
 }
 
 function mouseDragged(){
+    /**
     if(overLocked){
         ptSize = 10;
         print("mouse pressed & dragged");
     }
     else{
         ptSize = 1;
+    }
+    **/
+    if(overLocked && mouseX > pmouseX){
+        rotation-=dragSpeed;
+        print("mouse dragged to right");
+    }
+    if(overLocked && mouseX < pmouseX){
+        rotation+=dragSpeed;
+        print("mouse dragged to left");
+    }
+    if(overLocked && mouseY > pmouseY){
+        tilt-=dragSpeed;
+        print("mouse dragged up");
+    }
+    if(overLocked && mouseY < pmouseY){
+        tilt+=dragSpeed;
+        print("mouse dragged down");
     }
 }
 
