@@ -5,7 +5,6 @@
 let x, y, z, a, b, n, m, u, v;
 let scalar = 50;
 let scalarZ = 20;
-let iteration = .3;         // Create GUI element for density that varies between 0.1 & 0.5
 let counter = 0;
 let gridSize = 15;
 
@@ -16,8 +15,9 @@ let gui;
 var bgColor = [0, 25, 50];         // Dark blue color
 var ptSize = 1;
 var ptColor = [255, 255, 255];
+var density = .3;         // Create GUI element for density that varies between 0.1 & 0.5
 var zoom = 0;
-var tilt = 0;
+var tilt = 45;
 var rotation = 0;
 var variation = 0;
 
@@ -25,6 +25,7 @@ var variation = 0;
 let geoSizeMultiple;
 let angle;
 let rotAngle;
+let iteration;
 
 // Color declaration
 let blackSolid, whiteSolid, redSolid, greenSolid, blueSolid;
@@ -50,6 +51,7 @@ function setup(){
     blueSolid = color(0, 0, 255);
 
 
+
     // Initialize GUI
     // Parameters include: (label (which can be wrapped text), x-pos from left,
     // y-pos from top)
@@ -60,6 +62,10 @@ function setup(){
     sliderRange(1, 10, 1);
     gui.addGlobals('ptSize', 'ptColor');
 
+    // set point density
+    sliderRange(0.15, 0.5, 0.01);
+    gui.addGlobals('density');
+
     // set speed range
     sliderRange(0.0, 100.0, 0.1);
     gui.addGlobals('variation');
@@ -69,7 +75,7 @@ function setup(){
     gui.addGlobals('zoom');
 
     // set tilt, or rotate-x angle, in degrees
-    sliderRange(0, 90, 5);
+    sliderRange(0, 90, 1);
     gui.addGlobals('tilt');
 
     // set view rotation, or rotate-z angle, in degrees
@@ -86,6 +92,7 @@ function setup(){
 // Draw function
 function draw() {
     background(bgColor);
+
     push();
 
     // Central geo in canvas
@@ -94,13 +101,22 @@ function draw() {
     // Re-associate control variable names with gui variables
     angle = tilt;
     rotAngle = rotation;
+    iteration = density;
 
     // View controls
     rotateX(radians(angle));        // Tilt
     rotateZ(radians(rotAngle));     // Z-axis Rotation
 
+    // Background grid construction and draw
+    backGrid = new Grid(zoom, whiteGrad10, 50);
+    backGrid.draw();
+
     // Geo creation
     chladniPat();
+
+    // Animate chladni variation iteratively through draw()
+    variation+=0.001;
+
     pop();
 }
 
@@ -119,8 +135,8 @@ function chladniPat(){
     noFill();
     stroke(ptColor);
     strokeWeight(ptSize);
-    for(u=-gridSize; u < gridSize ; u+=iteration){
-        for(v=-gridSize; v < gridSize; v+=iteration){
+    for(u=-gridSize; u <= gridSize ; u+=iteration){
+        for(v=-gridSize; v <= gridSize; v+=iteration){
             // Static Values
             /**
              a = 4.14;
@@ -152,4 +168,27 @@ function chladniPat(){
 }
 
 //**********************************************************************************
-// Background Grid
+// Background Grid Class
+class Grid{
+    constructor(z, gridColor, spacing){
+        //this.z = z;
+        this.z = 0;
+        this.gridColor = gridColor;
+        this.spacing = spacing;
+    }
+
+    draw(){
+        push();
+        strokeWeight(1);
+        stroke(this.gridColor);
+        translate(-gridSize, -gridSize, this.z);           // X-value used to vary start position
+        for(let i=0; i <= gridSize * 2; i+=10){
+            line(0, i, gridSize * 2, i);       // Horizontal Lines
+        }                              // Line spacing varies by passed through parameter
+        for(let i=0; i <= gridSize * 2; i+=10){
+            line(i, 0, i, gridSize * 2);       // Vertical Lines
+        }
+        pop();
+    }
+
+}
