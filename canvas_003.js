@@ -1,7 +1,5 @@
 //**********************************************************************************
 // Declare variables
-
-
 let x, y, z, a, b, n, m, u, v;
 let scalar = 50;
 let scalarZ = 20;
@@ -10,6 +8,9 @@ let gridSize = 15;
 
 // GUI
 let gui;
+
+let backGrid;
+let chladniGeo;
 
 // GUI library requires the use of 'var' to define variables, and not 'let'
 var bgColor = [0, 25, 50];         // Dark blue color
@@ -51,7 +52,7 @@ function setup(){
     greenSolid = color(0, 255, 0);
     blueSolid = color(0, 0, 255);
 
-
+    chladniGeo = new MathGeo();
 
     // Initialize GUI
     // Parameters include: (label (which can be wrapped text), x-pos from left,
@@ -120,7 +121,7 @@ function draw() {
     }
 
     // Geo creation
-    chladniPat();
+    chladniGeo.draw();
 
     // Animate chladni variation iteratively through draw()
     if(animation) {
@@ -138,42 +139,45 @@ function windowResized() {
 
 //**********************************************************************************
 // Geo creation
-function chladniPat(){
-    push();
-    //translate(0, 0, 0);
-    //translate(-width/2, -height/2, 0);
-    noFill();
-    stroke(ptColor);
-    strokeWeight(ptSize);
-    for(u=-gridSize; u <= gridSize ; u+=iteration){
-        for(v=-gridSize; v <= gridSize; v+=iteration){
-            // Static Values
-            /**
-             a = 4.14;
-             b = 7.96;
-             m = a;
-             n = b;
-             **/
+class MathGeo {
+    constructor() {
+    }
 
-            // Dynamic values
-            a = map(variation, 0, 100, 4, 8);
-            b = map(variation, 0, 100, 4, 8);
-            m = map(variation, 0, 100, 4, 8);
-            n = map(variation, 0, 100, 4, 8);
+    draw() {
+        push();
+        noFill();
+        stroke(ptColor);
+        strokeWeight(ptSize);
+        for (u = -gridSize; u <= gridSize; u += iteration) {
+            for (v = -gridSize; v <= gridSize; v += iteration) {
+                // Static Values
+                /**
+                 a = 4.14;
+                 b = 7.96;
+                 m = a;
+                 n = b;
+                 **/
 
-            x = u * scalar;
-            y = v * scalar;
-            z = a * sin(PI * n * x) * sin(PI * m * y) + b * sin(PI * m * x) * sin(PI * n * y) * scalarZ;
-            point(x, y, z);
+                // Dynamic values
+                a = map(variation, 0, 100, 4, 8);
+                b = map(variation, 0, 100, 4, 8);
+                m = map(variation, 0, 100, 4, 8);
+                n = map(variation, 0, 100, 4, 8);
+
+                x = u * scalar;
+                y = v * scalar;
+                z = a * sin(PI * n * x) * sin(PI * m * y) + b * sin(PI * m * x) * sin(PI * n * y) * scalarZ;
+                point(x, y, z);
+
+            }
         }
-    }
-    pop();
+        pop();
 
-    if(counter == 100){
-        counter = 0;
-    }
-    else{
-        counter+=iteration;
+        if (counter == 100) {
+            counter = 0;
+        } else {
+            counter += iteration;
+        }
     }
 }
 
@@ -198,5 +202,4 @@ class Grid{
         }
         pop();
     }
-
 }
