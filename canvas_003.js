@@ -1,4 +1,5 @@
-//**********************************************************************************
+//##################################################################################
+//##################################################################################
 // Declare variables
 let x, y, z, a, b, n, m, u, v;
 let scalar = 50;
@@ -23,6 +24,7 @@ var animation = true;   // Boolean to toggle anim in gui
 var grid = true;        // Boolean to toggle background grid in gui
 
 // Setup of pseudonyms for ctrl panel labels
+let pointSize;
 let iteration;          // Linked to density variable in gui
 let angle;              // Linked to tilt variable in gui
 let rotAngle;           // Linked to rotation variable in gui
@@ -43,16 +45,20 @@ let dragSpeed = 5.0;
 // This has to be included in the Setup Canvas & windowResized() function
 let buffer = 20;            // Compensates for bottom and right edges of window
 
-//
+//##################################################################################
+//##################################################################################
+// Preload function
 function preload(){
-
 }
 
-//**********************************************************************************
+//##################################################################################
+//##################################################################################
 // Setup function
 function setup(){
     // Setup canvas
     createCanvas(windowWidth - buffer, windowHeight - buffer, WEBGL);
+
+    //******************************************************************************
     // Color initialization
     whiteSolid = color(255, 255, 255);
     whiteGrad10 = color(255, 255, 255, 10);
@@ -62,8 +68,11 @@ function setup(){
     greenSolid = color(0, 255, 0);
     blueSolid = color(0, 0, 255);
 
+    //******************************************************************************
+    // Initiate geo function
     chladniGeo = new MathGeo();
 
+    //******************************************************************************
     // Initialize GUI
     // Parameters include: (label (which can be wrapped text), x-pos from left,
     // y-pos from top)
@@ -103,18 +112,13 @@ function setup(){
 
 }
 
-//**********************************************************************************
+//##################################################################################
+//##################################################################################
 // Draw function
 function draw() {
     background(bgColor);
 
-//    // Mouse controls
-//    let geoX, geoY, geoXSize, geoYSize;
-//    let overGeo = false;    // Bool for mouse over geo
-//    let overLocked = false;     // Bool to retain mouse pos over geo
-//    let rotOffset = 0.0;
-//    let tiltOffset = 0.0;
-
+    //******************************************************************************
     // Evaluate mouse controls
     geoX = windowWidth / 2;
     geoY = windowHeight / 2;
@@ -134,16 +138,15 @@ function draw() {
         overGeo = false;
     }
 
-
-
-
-    push();
-    translate(0, 0, zoom);  // Centralize location of geo in canvas
-
+    //******************************************************************************
     // Re-associate control variable names with gui variables
     angle = tilt;
     rotAngle = rotation;
     iteration = density;
+
+    //******************************************************************************
+    push();
+    translate(0, 0, zoom);  // Centralize location of geo in canvas
 
     // View controls
     rotateX(radians(angle));        // Tilt
@@ -162,8 +165,8 @@ function draw() {
 
 }
 
-//**********************************************************************************
-//**********************************************************************************
+//##################################################################################
+//##################################################################################
 // Functions
 
 //**********************************************************************************
@@ -172,61 +175,70 @@ function windowResized() {
     resizeCanvas(windowWidth - buffer, windowHeight - buffer);
 }
 
+//**********************************************************************************
+// Initiates actions for when the mouse button is pressed
 function mousePressed(){
     if(overGeo){
         overLocked = true;
-        print("overGeo & mouse pressed & overLocked");
+        //print("overGeo & mouse pressed & overLocked");              // Used for debug
     }
     else{
         overLocked = false;
-        print("not overGeo & mouse pressed & not overLocked");
+        //print("not overGeo & mouse pressed & not overLocked");      // Used for debug
     }
 }
 
+//**********************************************************************************
+// Drives geo rotation and tilt based on mouse drag direction
 function mouseDragged(){
-    /**
-    if(overLocked){
-        ptSize = 10;
-        print("mouse pressed & dragged");
-    }
-    else{
-        ptSize = 1;
-    }
-    **/
     if(overLocked && mouseX > pmouseX){
         rotation-=dragSpeed;
-        print("mouse dragged to right");
+        //print("mouse dragged to right");  // Used for debug
     }
     if(overLocked && mouseX < pmouseX){
         rotation+=dragSpeed;
-        print("mouse dragged to left");
+        //print("mouse dragged to left");   // Used for debug
     }
     if(overLocked && mouseY > pmouseY){
         tilt-=dragSpeed;
-        print("mouse dragged up");
+        //print("mouse dragged up");        // Used for debug
     }
     if(overLocked && mouseY < pmouseY){
         tilt+=dragSpeed;
-        print("mouse dragged down");
+        //print("mouse dragged down");      // Used for debug
     }
 }
 
+//**********************************************************************************
+// Coordinates with mousePressed function
 function mouseReleased(){
     overLocked = false;
-    print("mouse released");
+    //print("mouse released");              // Used for debug
 }
 
 //**********************************************************************************
-//**********************************************************************************
+// Manages mouse wheel for zooming in/out geo
+function mouseWheel(event){
+    zoom -= event.delta;
+    return false;           // Included to block page scrolling
+}
+
+//##################################################################################
+//##################################################################################
 // Classes
 
 //**********************************************************************************
 // Geo creation
 class MathGeo {
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // Class Constructor
     constructor() {
-
     }
 
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // Class Methods
+    // *******************************************************
+    // Renders math geo
     draw() {
         let gradientZColor = new Gradient(greenSolid, redSolid);
         push();
@@ -272,11 +284,17 @@ class MathGeo {
 //**********************************************************************************
 // Background Grid Class
 class Grid{
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // Class Constructor
     constructor(gridColor, spacing){
         this.gridColor = gridColor;
         this.spacing = spacing;
     }
 
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // Class Methods
+    // *******************************************************
+    // Renders grid geo
     draw(){
         push();
         strokeWeight(2);
@@ -284,7 +302,7 @@ class Grid{
         translate(-gridSize * scalar, -gridSize * scalar, 0);           // X-value used to vary start position
         for(let i=0; i <= gridSize * scalar * 2; i+=this.spacing){
             line(0, i, gridSize * scalar * 2, i);       // Horizontal Lines
-        }                              // Line spacing varies by passed through parameter
+        }                                                       // Line spacing varies by passed through parameter
         for(let i=0; i <= gridSize * scalar * 2; i+=this.spacing){
             line(i, 0, i, gridSize * scalar * 2);       // Vertical Lines
         }
