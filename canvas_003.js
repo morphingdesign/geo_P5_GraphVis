@@ -18,11 +18,13 @@ var ptSize = 1;
 var ptColor = [255, 255, 255];
 var zoom = 0;
 var tilt = 0;
+var rotation = 0;
 var variation = 0;
 
 // Setup of pseudonyms for ctrl panel labels
 let geoSizeMultiple;
 let angle;
+let rotAngle;
 
 // Color declaration
 let blackSolid, whiteSolid, redSolid, greenSolid, blueSolid;
@@ -63,12 +65,16 @@ function setup(){
     gui.addGlobals('variation');
 
     // set zoom, or z-depth
-    sliderRange(-150, 10, 1);
+    sliderRange(-1000, 500, 1);
     gui.addGlobals('zoom');
 
     // set tilt, or rotate-x angle, in degrees
     sliderRange(0, 90, 5);
     gui.addGlobals('tilt');
+
+    // set view rotation, or rotate-z angle, in degrees
+    sliderRange(0, 360, 1);
+    gui.addGlobals('rotation');
 
     // set bgColor
     sliderRange(0, 255, 1);
@@ -81,20 +87,31 @@ function setup(){
 function draw() {
     background(bgColor);
     push();
-    //translate(0, 0, zoom);
+
+    // Central geo in canvas
     translate(0, 0, zoom);
-    //translate(-windowWidth / 2, -windowHeight/2, zoom);
+
+    // Re-associate control variable names with gui variables
     angle = tilt;
-    rotateX(radians(angle));
+    rotAngle = rotation;
+
+    // View controls
+    rotateX(radians(angle));        // Tilt
+    rotateZ(radians(rotAngle));     // Z-axis Rotation
+
+    // Geo creation
     chladniPat();
     pop();
 }
 
+//**********************************************************************************
 // Dynamically adjust the canvas to the window
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 
+//**********************************************************************************
+// Geo creation
 function chladniPat(){
     push();
     //translate(0, 0, 0);
@@ -133,3 +150,6 @@ function chladniPat(){
         counter+=iteration;
     }
 }
+
+//**********************************************************************************
+// Background Grid
