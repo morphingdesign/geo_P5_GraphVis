@@ -21,11 +21,12 @@ var tilt = 45;          // Linked to angle variable
 var rotation = 0;       // Linked to rotAngle variable
 var variation = 0;
 var animation = true;   // Boolean to toggle anim in gui
+var grid = true;   // Boolean to toggle background grid in gui
 
 // Setup of pseudonyms for ctrl panel labels
 let iteration;          // Linked to density variable in gui
 let angle;              // Linked to tilt variable in gui
-let rotAngle;           // Linked to rotation varaible in gui
+let rotAngle;           // Linked to rotation variable in gui
 
 // Color declaration
 let blackSolid, whiteSolid, redSolid, greenSolid, blueSolid;
@@ -87,7 +88,7 @@ function setup(){
     gui.addGlobals('bgColor');
 
     // Toggle animation on/off
-    gui.addGlobals('animation');
+    gui.addGlobals('animation', 'grid');
 
 }
 
@@ -111,8 +112,12 @@ function draw() {
     rotateZ(radians(rotAngle));     // Z-axis Rotation
 
     // Background grid construction and draw
-    backGrid = new Grid(zoom, whiteGrad10, 50);
-    backGrid.draw();
+    backGrid = new Grid(whiteGrad10, 50);
+
+    // Condition to display/hide background grid
+    if(grid) {
+        backGrid.draw();
+    }
 
     // Geo creation
     chladniPat();
@@ -175,23 +180,21 @@ function chladniPat(){
 //**********************************************************************************
 // Background Grid Class
 class Grid{
-    constructor(z, gridColor, spacing){
-        //this.z = z;
-        this.z = 0;
+    constructor(gridColor, spacing){
         this.gridColor = gridColor;
         this.spacing = spacing;
     }
 
     draw(){
         push();
-        strokeWeight(1);
+        strokeWeight(2);
         stroke(this.gridColor);
-        translate(-gridSize, -gridSize, this.z);           // X-value used to vary start position
-        for(let i=0; i <= gridSize * 2; i+=10){
-            line(0, i, gridSize * 2, i);       // Horizontal Lines
+        translate(-gridSize * scalar, -gridSize * scalar, 0);           // X-value used to vary start position
+        for(let i=0; i <= gridSize * scalar * 2; i+=this.spacing){
+            line(0, i, gridSize * scalar * 2, i);       // Horizontal Lines
         }                              // Line spacing varies by passed through parameter
-        for(let i=0; i <= gridSize * 2; i+=10){
-            line(i, 0, i, gridSize * 2);       // Vertical Lines
+        for(let i=0; i <= gridSize * scalar * 2; i+=this.spacing){
+            line(i, 0, i, gridSize * scalar * 2);       // Vertical Lines
         }
         pop();
     }
