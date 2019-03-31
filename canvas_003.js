@@ -141,9 +141,11 @@ function windowResized() {
 // Geo creation
 class MathGeo {
     constructor() {
+
     }
 
     draw() {
+        let gradientZColor = new Gradient(greenSolid, redSolid);
         push();
         noFill();
         stroke(ptColor);
@@ -167,6 +169,9 @@ class MathGeo {
                 x = u * scalar;
                 y = v * scalar;
                 z = a * sin(PI * n * x) * sin(PI * m * y) + b * sin(PI * m * x) * sin(PI * n * y) * scalarZ;
+
+                let gradZColor = gradientZColor.returnGrad(z, -1, 1);
+                stroke(gradZColor);
                 point(x, y, z);
 
             }
@@ -201,5 +206,33 @@ class Grid{
             line(i, 0, i, gridSize * scalar * 2);       // Vertical Lines
         }
         pop();
+    }
+}
+
+//**********************************************************************************
+// Gradient Class
+class Gradient {
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // Class Constructor
+    // Returns a gradient based on color parameter
+    // Alpha start is opaque end and alpha end is most transparent end of gradient
+    constructor(startColorToGrad, endColorToGrad){
+        this.startColorToGrad = startColorToGrad;
+        this.endColorToGrad = endColorToGrad;
+    }
+
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // Class Methods
+    // *******************************************************
+    // Needs to be used within a loop to output the color in integer format
+    returnGrad(iterVal, minValue, maxValue){
+        this.iterVal = iterVal;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+        let gradient;
+
+        let gradRange = map(this.iterVal, this.minValue, this.maxValue, 0.0, 1.0);  // Map arc angle between 0 and 1 gradient range
+        return gradient = lerpColor(this.startColorToGrad, this.endColorToGrad, gradRange);  // Vary the color
+        //return gradient;
     }
 }
