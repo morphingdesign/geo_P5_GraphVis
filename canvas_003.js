@@ -6,11 +6,9 @@ let scalarZ = 20;
 let counter = 0;
 let gridSize = 15;
 
-// GUI
-let gui;
-
-let backGrid;
-let chladniGeo;
+let gui;            // GUI element from p5 GUI library
+let backGrid;       // Background grid, from Grid class
+let chladniGeo;     // Math geometry, from MathGeo class
 
 // GUI library requires the use of 'var' to define variables, and not 'let'
 var bgColor = [0, 25, 50];         // Dark blue color
@@ -32,6 +30,13 @@ let rotAngle;           // Linked to rotation variable in gui
 // Color declaration
 let blackSolid, whiteSolid, redSolid, greenSolid, blueSolid;
 let whiteGrad10, whiteGrad50;
+
+// Mouse controls
+let geoX, geoY, geoXSize, geoYSize;
+let overGeo = false;    // Bool for mouse over geo
+let overLocked = false;     // Bool to retain mouse pos over geo
+let rotOffset = 0.0;
+let tiltOffset = 0.0;
 
 //
 function preload(){
@@ -98,10 +103,37 @@ function setup(){
 function draw() {
     background(bgColor);
 
-    push();
+//    // Mouse controls
+//    let geoX, geoY, geoXSize, geoYSize;
+//    let overGeo = false;    // Bool for mouse over geo
+//    let overLocked = false;     // Bool to retain mouse pos over geo
+//    let rotOffset = 0.0;
+//    let tiltOffset = 0.0;
 
-    // Central geo in canvas
-    translate(0, 0, zoom);
+    // Evaluate mouse controls
+    geoX = windowWidth / 2;
+    geoY = windowHeight / 2;
+    geoXSize = gridSize * scalar / 2;
+    geoYSize = gridSize * scalar / 2;
+
+    if(
+        mouseX > geoX - geoXSize &&
+        mouseX < geoX + geoXSize &&
+        mouseY > geoY - geoYSize &&
+        mouseY < geoY + geoYSize
+    )
+    {
+        overGeo = true;
+    }
+    else{
+        overGeo = false;
+    }
+
+
+
+
+    push();
+    translate(0, 0, zoom);  // Centralize location of geo in canvas
 
     // Re-associate control variable names with gui variables
     angle = tilt;
@@ -112,30 +144,62 @@ function draw() {
     rotateX(radians(angle));        // Tilt
     rotateZ(radians(rotAngle));     // Z-axis Rotation
 
-    // Background grid construction and draw
-    backGrid = new Grid(whiteGrad10, 50);
-
-    // Condition to display/hide background grid
-    if(grid) {
+    // Scene geometry
+    backGrid = new Grid(whiteGrad10, 50);   // Background grid construction and draw
+    if(grid) {                  // Condition to display/hide background grid
         backGrid.draw();
     }
-
-    // Geo creation
-    chladniGeo.draw();
-
-    // Animate chladni variation iteratively through draw()
-    if(animation) {
+    chladniGeo.draw();          // Geo creation
+    if(animation) {             // Animate chladni variation iteratively through draw()
         variation += 0.001;
     }
-
     pop();
+
+
+    //mousePressed();
+    //mouseDragged();
+    //mouseReleased();
 }
+
+//**********************************************************************************
+//**********************************************************************************
+// Functions
 
 //**********************************************************************************
 // Dynamically adjust the canvas to the window
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
+
+function mousePressed(){
+    if(overGeo){
+        overLocked = true;
+        print("overGeo & mouse pressed & overLocked");
+    }
+    else{
+        overLocked = false;
+        print("not overGeo & mouse pressed & not overLocked");
+    }
+}
+
+function mouseDragged(){
+    if(overLocked){
+        ptSize = 10;
+        print("mouse pressed & dragged");
+    }
+    else{
+        ptSize = 1;
+    }
+}
+
+function mouseReleased(){
+    overLocked = false;
+    print("mouse released");
+}
+
+//**********************************************************************************
+//**********************************************************************************
+// Classes
 
 //**********************************************************************************
 // Geo creation
