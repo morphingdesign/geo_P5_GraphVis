@@ -15,17 +15,17 @@ let gui;
 var bgColor = [0, 25, 50];         // Dark blue color
 var ptSize = 1;
 var ptColor = [255, 255, 255];
-var density = .3;         // Create GUI element for density that varies between 0.1 & 0.5
-var zoom = 0;
-var tilt = 45;
-var rotation = 0;
+var density = .3;       // Linked to iteration variable
+var zoom = -500;
+var tilt = 45;          // Linked to angle variable
+var rotation = 0;       // Linked to rotAngle variable
 var variation = 0;
+var animation = true;   // Boolean to toggle anim in gui
 
 // Setup of pseudonyms for ctrl panel labels
-let geoSizeMultiple;
-let angle;
-let rotAngle;
-let iteration;
+let iteration;          // Linked to density variable in gui
+let angle;              // Linked to tilt variable in gui
+let rotAngle;           // Linked to rotation varaible in gui
 
 // Color declaration
 let blackSolid, whiteSolid, redSolid, greenSolid, blueSolid;
@@ -57,34 +57,37 @@ function setup(){
     // y-pos from top)
     gui = createGui('Control Panel (Double-click menu to expand/collapse', 20, 20);
 
-    // set ptSize range
-    // include ptColor
+    // Set ptSize range
+    // Include ptColor to adjust point color
     sliderRange(1, 10, 1);
     gui.addGlobals('ptSize', 'ptColor');
 
-    // set point density
+    // Set point density
     sliderRange(0.15, 0.5, 0.01);
     gui.addGlobals('density');
 
-    // set speed range
+    // Set speed range
     sliderRange(0.0, 100.0, 0.1);
     gui.addGlobals('variation');
 
-    // set zoom, or z-depth
+    // Set zoom, or z-depth
     sliderRange(-1000, 500, 1);
     gui.addGlobals('zoom');
 
-    // set tilt, or rotate-x angle, in degrees
+    // Set tilt, or rotate-x angle, in degrees
     sliderRange(0, 90, 1);
     gui.addGlobals('tilt');
 
-    // set view rotation, or rotate-z angle, in degrees
+    // Set view rotation, or rotate-z angle, in degrees
     sliderRange(0, 360, 1);
     gui.addGlobals('rotation');
 
-    // set bgColor
+    // Set bgColor
     sliderRange(0, 255, 1);
     gui.addGlobals('bgColor');
+
+    // Toggle animation on/off
+    gui.addGlobals('animation');
 
 }
 
@@ -115,7 +118,9 @@ function draw() {
     chladniPat();
 
     // Animate chladni variation iteratively through draw()
-    variation+=0.001;
+    if(animation) {
+        variation += 0.001;
+    }
 
     pop();
 }
