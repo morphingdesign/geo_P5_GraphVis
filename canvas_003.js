@@ -5,7 +5,7 @@
 let x, y, z, a, b, n, m, u, v;
 let scalar = 50;
 let scalarZ = 20;
-let iteration = .3;
+let iteration = .3;         // Create GUI element for density that varies between 0.1 & 0.5
 let counter = 0;
 let gridSize = 15;
 
@@ -17,11 +17,12 @@ var bgColor = [0, 25, 50];         // Dark blue color
 var ptSize = 1;
 var ptColor = [255, 255, 255];
 var zoom = 0;
+var tilt = 0;
 var variation = 0;
 
 // Setup of pseudonyms for ctrl panel labels
 let geoSizeMultiple;
-
+let angle;
 
 // Color declaration
 let blackSolid, whiteSolid, redSolid, greenSolid, blueSolid;
@@ -61,9 +62,13 @@ function setup(){
     sliderRange(0.0, 100.0, 0.1);
     gui.addGlobals('variation');
 
-    // set geoSizeMultiple range
+    // set zoom, or z-depth
     sliderRange(-150, 10, 1);
     gui.addGlobals('zoom');
+
+    // set tilt, or rotate-x angle, in degrees
+    sliderRange(0, 90, 5);
+    gui.addGlobals('tilt');
 
     // set bgColor
     sliderRange(0, 255, 1);
@@ -77,9 +82,10 @@ function draw() {
     background(bgColor);
     push();
     //translate(0, 0, zoom);
-
-    translate(-windowWidth / 4, -windowHeight/4, zoom);
-    rotateX(radians(45));
+    translate(0, 0, zoom);
+    //translate(-windowWidth / 2, -windowHeight/2, zoom);
+    angle = tilt;
+    rotateX(radians(angle));
     chladniPat();
     pop();
 }
@@ -91,12 +97,13 @@ function windowResized() {
 
 function chladniPat(){
     push();
-    translate(0, 0, 0);
+    //translate(0, 0, 0);
+    //translate(-width/2, -height/2, 0);
     noFill();
     stroke(ptColor);
     strokeWeight(ptSize);
-    for(u=0; u < gridSize ; u+=iteration){
-        for(v=0; v < gridSize; v+=iteration){
+    for(u=-gridSize; u < gridSize ; u+=iteration){
+        for(v=-gridSize; v < gridSize; v+=iteration){
             // Static Values
             /**
              a = 4.14;
