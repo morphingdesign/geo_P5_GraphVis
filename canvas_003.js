@@ -20,7 +20,7 @@ let chladniGeo;         // Math geometry, from MathGeo class
 var bgColor = [0, 25, 50];         // Dark blue color
 var ptSize = 1;
 var ptColor = [255, 255, 255];
-var density = .3;       // Linked to iteration variable
+var density = .5;       // Linked to iteration variable
 var zoom = -500;
 var tilt = 45;          // Linked to angle variable
 var rotation = 0;       // Linked to rotAngle variable
@@ -35,7 +35,7 @@ let angle;              // Linked to tilt variable in gui
 let rotAngle;           // Linked to rotation variable in gui
 
 // Color declaration
-let blackSolid, whiteSolid, redSolid, greenSolid, blueSolid;
+let blackSolid, whiteSolid, redSolid, greenSolid, blueSolid, yellowSolid;
 let whiteGrad10, whiteGrad50;
 
 // Mouse controls
@@ -70,6 +70,7 @@ function setup(){
     redSolid = color(255, 0, 0);
     greenSolid = color(0, 255, 0);
     blueSolid = color(0, 0, 255);
+    yellowSolid = color(0, 255, 255);
 
     //******************************************************************************
     // Initiate geo function
@@ -119,6 +120,8 @@ function setup(){
     // Set view rotation, or rotate-z angle, in degrees
     sliderRange(0, 360, 1);
     guiViewport.addGlobals('rotation');
+
+
 }
 
 //##################################################################################
@@ -242,6 +245,7 @@ class MathGeo {
     // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     // Class Constructor
     constructor() {
+
     }
 
     // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -249,6 +253,10 @@ class MathGeo {
     // *******************************************************
     // Renders math geo
     draw() {
+
+        let geoPts = [];
+        let counter = 0;
+
         let gradientZColor = new Gradient(greenSolid, redSolid);
         push();
         noFill();
@@ -277,20 +285,73 @@ class MathGeo {
                 y = v * scalar;
                 z = a * sin(PI * n * x) * sin(PI * m * y) + b * sin(PI * m * x) * sin(PI * n * y) * scalarZ;
 
+                geoPts[counter] = createVector(x, y, z);
+                //print(geoPts[counter]);
+
+
                 // *******************************************************
                 //
                 let gradZColor = gradientZColor.returnGrad(z, -1, 1);
                 stroke(gradZColor);
-                point(x, y, z);
+                //point(x, y, z);
+                point(geoPts[counter].x, geoPts[counter].y, geoPts[counter].z);
+
+
+
+                counter++;
+                //print(counter);
+
             }
         }
         pop();
 
-        if (counter == 100) {
-            counter = 0;
-        } else {
-            counter += iteration;
+        print("Length of geoPts[]: " + geoPts.length);
+
+        // Code not being used
+        //if (counter == 100) {
+        //    counter = 0;
+        //} else {
+        //    counter += iteration;
+        //}
+
+
+        let maxZVal = 0.0;
+        let maxPtsIndices = [];
+        let indexCounter = 0;
+        let arrayLength = geoPts.length;
+
+        for(let i = 1; i < arrayLength; i++){
+            //print("geoPts[" + i + "]= " + geoPts[i].z);
+            if(geoPts[i].z > geoPts[i - 1].z) {
+                //maxPtsIndices[indexCounter] = geoPts[i];
+                maxZVal = geoPts[i].z;
+                //print("maxPtsIndices[" + indexCounter + "]= " + maxPtsIndices[indexCounter]);
+                //indexCounter++;
+                //print("maxZVal: " + maxZVal);
+            }
+            //print("Processed maxZVal: " + maxZVal);
         }
+        print("Processed maxZVal: " + maxZVal);
+
+        let lineExtend = 40;
+
+        for(let i = 0; i < geoPts.length; i++){
+            if(geoPts[i].z == maxZVal){
+                print("[" + i + "]= " + geoPts[i].z);
+                stroke(yellowSolid);
+                strokeWeight(10);
+                line(geoPts[i].x, geoPts[i].y, geoPts[i].z, geoPts[i].x, geoPts[i].y, geoPts[i].z + lineExtend);
+                //point(geoPts[i].x, geoPts[i].y, geoPts[i].z);
+            }
+        }
+
+
+
+        //geoPts.sort(function(a, b){
+        //    return a.value - b.value;
+        //});
+        //console.log(geoPts);
+
     }
 }
 
