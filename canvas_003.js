@@ -256,6 +256,9 @@ class MathGeo {
         strokeWeight(ptSize);
         for (u = -gridSize; u <= gridSize; u += iteration) {
             for (v = -gridSize; v <= gridSize; v += iteration) {
+
+                // *******************************************************
+                // The following are variables & formulas for chladni patterns
                 // Static Values
                 /**
                  a = 4.14;
@@ -274,10 +277,11 @@ class MathGeo {
                 y = v * scalar;
                 z = a * sin(PI * n * x) * sin(PI * m * y) + b * sin(PI * m * x) * sin(PI * n * y) * scalarZ;
 
+                // *******************************************************
+                //
                 let gradZColor = gradientZColor.returnGrad(z, -1, 1);
                 stroke(gradZColor);
                 point(x, y, z);
-
             }
         }
         pop();
