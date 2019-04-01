@@ -70,7 +70,7 @@ function setup(){
     redSolid = color(255, 0, 0);
     greenSolid = color(0, 255, 0);
     blueSolid = color(0, 0, 255);
-    yellowSolid = color(0, 255, 255);
+    yellowSolid = color(255, 255, 0);
 
     //******************************************************************************
     // Initiate geo function
@@ -315,7 +315,7 @@ class MathGeo {
         //}
 
 
-        let maxZVal = 0.0;
+        let maxZVal;
         let maxPtsIndices = [];
         let indexCounter = 0;
         let arrayLength = geoPts.length;
@@ -334,13 +334,16 @@ class MathGeo {
         print("Processed maxZVal: " + maxZVal);
 
         let lineExtend = 40;
+        let bufferRange = 0.0000001;
 
         for(let i = 0; i < geoPts.length; i++){
-            if(geoPts[i].z == maxZVal){
+            if(geoPts[i].z >= maxZVal - bufferRange){
                 print("[" + i + "]= " + geoPts[i].z);
                 stroke(yellowSolid);
-                strokeWeight(10);
+                strokeWeight(2);
                 line(geoPts[i].x, geoPts[i].y, geoPts[i].z, geoPts[i].x, geoPts[i].y, geoPts[i].z + lineExtend);
+                strokeWeight(5);
+                point(geoPts[i].x, geoPts[i].y, geoPts[i].z + lineExtend);
                 //point(geoPts[i].x, geoPts[i].y, geoPts[i].z);
             }
         }
