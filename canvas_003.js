@@ -281,80 +281,60 @@ class MathGeo {
                 m = map(variation, 0, 100, 4, 8);
                 n = map(variation, 0, 100, 4, 8);
 
+                // Create x, y, z values from formulas
                 x = u * scalar;
                 y = v * scalar;
                 z = a * sin(PI * n * x) * sin(PI * m * y) + b * sin(PI * m * x) * sin(PI * n * y) * scalarZ;
 
+                // *******************************************************
+                // Create vectors from x, y, z values and include them in new array
                 geoPts[counter] = createVector(x, y, z);
-                //print(geoPts[counter]);
-
+                //print(geoPts[counter]);                       // Used for debug
 
                 // *******************************************************
-                //
-                let gradZColor = gradientZColor.returnGrad(z, -1, 1);
+                // Apply gradient color to stroke and generate points using array values
+                let gradZColor = gradientZColor.returnGrad(z, -1.0, 1.0);
                 stroke(gradZColor);
-                //point(x, y, z);
                 point(geoPts[counter].x, geoPts[counter].y, geoPts[counter].z);
-
-
-
                 counter++;
-                //print(counter);
-
+                //print(counter);                               // Used for debug
             }
         }
         pop();
 
-        print("Length of geoPts[]: " + geoPts.length);
+        //print("Length of geoPts[]: " + geoPts.length);        // Used for debug
 
-        // Code not being used
-        //if (counter == 100) {
-        //    counter = 0;
-        //} else {
-        //    counter += iteration;
-        //}
+        // *******************************************************
+        // Variables for use in the extraction of max z-values and marker geo
+        let maxZVal;                        // Float var to contain max z as it goes through for loop
+        let lineExtend = 40;                // Marker length; extends along z-axis
+        let bufferRange = 0.0000001;        // Buffer for adding other points below maxZVal
 
-
-        let maxZVal;
-        let maxPtsIndices = [];
-        let indexCounter = 0;
-        let arrayLength = geoPts.length;
-
-        for(let i = 1; i < arrayLength; i++){
-            //print("geoPts[" + i + "]= " + geoPts[i].z);
-            if(geoPts[i].z > geoPts[i - 1].z) {
-                //maxPtsIndices[indexCounter] = geoPts[i];
-                maxZVal = geoPts[i].z;
-                //print("maxPtsIndices[" + indexCounter + "]= " + maxPtsIndices[indexCounter]);
-                //indexCounter++;
-                //print("maxZVal: " + maxZVal);
+        // *******************************************************
+        // Iteratively evaluate each array point to find the maxZVal
+        for(let i = 1; i < geoPts.length; i++){
+            //print("geoPts[" + i + "]= " + geoPts[i].z);       // Used for debug
+            if(geoPts[i].z > geoPts[i - 1].z) {                 // Compare current with previous pt's z-value
+                maxZVal = geoPts[i].z;                          // If larger, then re-assign maxZVal variable
+                //print("maxZVal: " + maxZVal);                 // Used for debug
             }
-            //print("Processed maxZVal: " + maxZVal);
+            //print("Processed maxZVal: " + maxZVal);           // Used for debug
         }
-        print("Processed maxZVal: " + maxZVal);
+        //print("Processed maxZVal: " + maxZVal);               // Used for debug
 
-        let lineExtend = 40;
-        let bufferRange = 0.0000001;
-
+        // *******************************************************
+        // Iteratively go through each array point and isolate those that meet maxZVal condition
         for(let i = 0; i < geoPts.length; i++){
-            if(geoPts[i].z >= maxZVal - bufferRange){
-                print("[" + i + "]= " + geoPts[i].z);
-                stroke(yellowSolid);
-                strokeWeight(2);
+            if(geoPts[i].z >= maxZVal - bufferRange){       // If pt above or equal to maxZVal, then add marker
+                //print("[" + i + "]= " + geoPts[i].z);     // Used for debug
+                stroke(yellowSolid);                        // The following line and point create the marker
+                strokeWeight(2);                            // .... for the given point
                 line(geoPts[i].x, geoPts[i].y, geoPts[i].z, geoPts[i].x, geoPts[i].y, geoPts[i].z + lineExtend);
                 strokeWeight(5);
                 point(geoPts[i].x, geoPts[i].y, geoPts[i].z + lineExtend);
-                //point(geoPts[i].x, geoPts[i].y, geoPts[i].z);
+                //point(geoPts[i].x, geoPts[i].y, geoPts[i].z); // Used for debug
             }
         }
-
-
-
-        //geoPts.sort(function(a, b){
-        //    return a.value - b.value;
-        //});
-        //console.log(geoPts);
-
     }
 }
 
@@ -407,10 +387,9 @@ class Gradient {
         this.iterVal = iterVal;
         this.minValue = minValue;
         this.maxValue = maxValue;
-        let gradient;
 
         let gradRange = map(this.iterVal, this.minValue, this.maxValue, 0.0, 1.0);  // Map arc angle between 0 and 1 gradient range
-        return gradient = lerpColor(this.startColorToGrad, this.endColorToGrad, gradRange);  // Vary the color
-        //return gradient;
+        return lerpColor(this.startColorToGrad, this.endColorToGrad, gradRange);    // Vary the color & return val for method
+                                                                                    // .... no need to include a variable to return
     }
 }
