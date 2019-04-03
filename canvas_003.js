@@ -30,6 +30,8 @@ var variation = 0;
 var animation = true;   // Boolean to toggle anim in gui
 var grid = true;        // Boolean to toggle background grid in gui
 var markers = true;     // Boolean to toggle markers in gui
+var geo1 = true;
+var geo2 = false;
 
 // Setup of pseudonyms for ctrl panel labels
 let pointSize;
@@ -116,6 +118,9 @@ function setup(){
 
     // Toggle animation on/off
     guiGeo.addGlobals('animation', 'grid', 'markers');
+
+    // Toggle geometries
+    guiGeo.addGlobals('geo1', 'geo2');
 
     //******************************************************************************
     // Initialize GUI for viewport controls
@@ -293,10 +298,18 @@ class MathGeo {
                 m = map(variation, 0, 100, 4, 8);
                 n = map(variation, 0, 100, 4, 8);
 
-                // Create x, y, z values from formulas
-                x = u * scalar;
-                y = v * scalar;
-                z = a * sin(PI * n * x) * sin(PI * m * y) + b * sin(PI * m * x) * sin(PI * n * y) * scalarZ;
+                if(geo1) {
+                    // Create x, y, z values from formulas
+                    x = u * scalar;
+                    y = v * scalar;
+                    z = a * sin(PI * n * x) * sin(PI * m * y) + b * sin(PI * m * x) * sin(PI * n * y) * scalarZ;
+                }
+
+                if(geo2){
+                    x = u * cos(v);
+                    y = u * sin(v);
+                    z = 0.5 * u * u * sin(2 * v);
+                }
 
                 // *******************************************************
                 // Create vectors from x, y, z values and include them in new array
