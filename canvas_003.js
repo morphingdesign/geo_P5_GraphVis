@@ -17,7 +17,8 @@ let backGrid;           // Background grid, from Grid class
 let chladniGeo;         // Math geometry, from MathGeo class
 
 // GUI library requires the use of 'var' to define variables, and not 'let'
-var bgColor = [0, 25, 50];         // Dark blue color
+//var bgColor = [0, 25, 50];         // Dark blue color
+var bgColor = [5, 5, 86];   // Original color [0, 25, 50];
 var ptSize = 1;
 var ptColor = [255, 255, 255];
 var density = .5;       // Linked to iteration variable
@@ -36,6 +37,7 @@ let rotAngle;           // Linked to rotation variable in gui
 
 // Color declaration
 let blackSolid, whiteSolid, redSolid, greenSolid, blueSolid, yellowSolid;
+let colSchWhite, colSchGrey, colSchBlue, colSchOrange, colSchRed;
 let whiteGrad10, whiteGrad50;
 
 // Mouse controls
@@ -71,6 +73,12 @@ function setup(){
     greenSolid = color(0, 255, 0);
     blueSolid = color(0, 0, 255);
     yellowSolid = color(255, 255, 0);
+
+    colSchWhite = color(239, 254, 232);  // Hex val: ('#F1F7ED');
+    colSchGrey = color(76, 89, 104);   // Hex val: ('#212529');
+    colSchBlue = color(5, 5, 86);   // Hex val: ('#050517');
+    colSchOrange = color(254, 37, 45); // Hex val: ('#E9262C');
+    colSchRed = color(204, 41, 45);    // Hex val: ('#8C2425');
 
     //******************************************************************************
     // Initiate geo function
@@ -257,7 +265,7 @@ class MathGeo {
         let geoPts = [];
         let counter = 0;
 
-        let gradientZColor = new Gradient(greenSolid, redSolid);
+        let gradientZColor = new Gradient(colSchWhite, colSchOrange);
         push();
         noFill();
         stroke(ptColor);
@@ -327,8 +335,8 @@ class MathGeo {
         for(let i = 0; i < geoPts.length; i++){
             if(geoPts[i].z >= maxZVal - bufferRange){       // If pt above or equal to maxZVal, then add marker
                 //print("[" + i + "]= " + geoPts[i].z);     // Used for debug
-                stroke(yellowSolid);                        // The following line and point create the marker
-                strokeWeight(2);                            // .... for the given point
+                stroke(colSchGrey);                        // The following line and point create the marker
+                strokeWeight(1);                            // .... for the given point
                 line(geoPts[i].x, geoPts[i].y, geoPts[i].z, geoPts[i].x, geoPts[i].y, geoPts[i].z + lineExtend);
                 strokeWeight(5);
                 point(geoPts[i].x, geoPts[i].y, geoPts[i].z + lineExtend);
