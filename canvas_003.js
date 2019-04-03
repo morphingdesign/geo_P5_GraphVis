@@ -30,8 +30,8 @@ var variation = 0;
 var animation = true;   // Boolean to toggle anim in gui
 var grid = true;        // Boolean to toggle background grid in gui
 var markers = true;     // Boolean to toggle markers in gui
-var geo1 = true;
-var geo2 = false;
+var geo1 = false;
+var geo2 = true;
 
 // Setup of pseudonyms for ctrl panel labels
 let pointSize;
@@ -292,13 +292,12 @@ class MathGeo {
                  n = b;
                  **/
 
-                // Dynamic values
-                a = map(variation, 0, 100, 4, 8);
-                b = map(variation, 0, 100, 4, 8);
-                m = map(variation, 0, 100, 4, 8);
-                n = map(variation, 0, 100, 4, 8);
-
                 if(geo1) {
+                    // Dynamic values
+                    a = map(variation, 0, 100, 4, 8);
+                    b = map(variation, 0, 100, 4, 8);
+                    m = map(variation, 0, 100, 4, 8);
+                    n = map(variation, 0, 100, 4, 8);
                     // Create x, y, z values from formulas
                     x = u * scalar;
                     y = v * scalar;
@@ -306,9 +305,12 @@ class MathGeo {
                 }
 
                 if(geo2){
-                    x = u * cos(v);
-                    y = u * sin(v);
-                    z = 0.5 * u * u * sin(2 * v);
+                    //n = map(variation, 0, 100, 4, 8);
+                    n = map(variation, 0, 100, 50, 500);
+                    x = u * cos(v) * scalar;
+                    y = u * sin(v) * scalar;
+                    z = (0.5 * u * u * sin(2 * v)) / (n  * sin(n)) * scalarZ;
+                    //z = (0.5 * u * u * sin(2 * v) / n  / sin(n)) * scalarZ;
                 }
 
                 // *******************************************************
