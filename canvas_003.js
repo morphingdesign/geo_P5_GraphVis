@@ -31,8 +31,9 @@ var seed = 0;
 var animation = true;   // Boolean to toggle anim in gui
 var grid = true;        // Boolean to toggle background grid in gui
 var markers = true;     // Boolean to toggle markers in gui
-var side_grids = false;  // Boolean to toggle background side grids in gui
-var amplitude = 20;      // Linked to scalarZ variable
+var side_grids = false; // Boolean to toggle background side grids in gui
+var axes = true;        // Boolean to toggle axes in gui;
+var amplitude = 20;     // Linked to scalarZ variable
 var geometry = ['geo1', 'geo2'];    // Array for drop-down geo selection menu
 
 // Setup of pseudonyms for ctrl panel labels
@@ -147,7 +148,7 @@ function setup(){
     guiViewport.addGlobals('rotation');
 
     // Toggle grid visibility
-    guiViewport.addGlobals('grid', 'side_grids');
+    guiViewport.addGlobals('grid', 'side_grids', 'axes');
 
 }
 
@@ -203,8 +204,13 @@ function draw() {
         backGrid.draw();
     }
 
-    gridAxis = new Grid(greenSolid);
-    gridAxis.draw();
+    gridAxis = new Axis();
+    if(axes){
+        gridAxis.draw('x-Axis');
+        gridAxis.draw('y-Axis');
+        gridAxis.draw('z-Axis');
+    }
+
 
     chladniGeo.draw();          // Geo creation
     if(animation) {             // Animate chladni seed iteratively through draw()
@@ -470,11 +476,10 @@ class Gradient {
 
 //**********************************************************************************
 // Grid Axes Class
-class Axis{
+class Axis {
     // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     // Class Constructor
-    constructor(gridColor){
-        this.gridColor = gridColor;
+    constructor(){
     }
 
     // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -484,30 +489,27 @@ class Axis{
     draw(orientation){
         push();
         strokeWeight(4);
-        stroke(this.gridColor);
         translate(-gridSize * scalar, -gridSize * scalar, 0);           // X-value used to vary start position
 
         switch (orientation){
             case 'x-Axis':
-                //rotateX(radians(90));
-                //translate(0, -(gridSize * scalar * 2) / 2, 0);
+                stroke(greenSolid);
                 break;
             case 'y-Axis':
-                //rotateZ(radians(90));
-                //rotateX(radians(90));
-                //translate(0, -(gridSize * scalar * 2) / 2, 0);
+                stroke(redSolid);
+                rotateZ(radians(90));
                 break;
             case 'z-Axis':
-
+                stroke(blueSolid);
+                translate(0, 0, -(gridSize * scalar * 2) / 2);
+                rotateY(radians(-90));
+                break;
             default:
+                stroke(greenSolid);
                 break;
         }
 
-
-            line(0, 0, gridSize * scalar * 2, 0);       // Horizontal Lines
-                                                               // Line spacing varies by passed through parameter
-
+        line(0, 0, gridSize * scalar * 2, 0);    // Line spacing varies by passed through parameter
         pop();
-
     }
 }
