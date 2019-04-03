@@ -14,6 +14,7 @@ let guiViewport;        // GUI for managing viewport controls (zoom, rotate, etc
 
 // In-file classes for geometry
 let backGrid;           // Background grid, from Grid class
+let gridAxis;           // Grid axes, from Axis class
 let chladniGeo;         // Math geometry, from MathGeo class
 
 // GUI library requires the use of 'var' to define variables, and not 'let'
@@ -201,6 +202,10 @@ function draw() {
         }
         backGrid.draw();
     }
+
+    gridAxis = new Grid(greenSolid);
+    gridAxis.draw();
+
     chladniGeo.draw();          // Geo creation
     if(animation) {             // Animate chladni seed iteratively through draw()
         seed += 0.001;
@@ -460,5 +465,49 @@ class Gradient {
         let gradRange = map(this.iterVal, this.minValue, this.maxValue, 0.0, 1.0);  // Map arc angle between 0 and 1 gradient range
         return lerpColor(this.startColorToGrad, this.endColorToGrad, gradRange);    // Vary the color & return val for method
                                                                                     // .... no need to include a variable to return
+    }
+}
+
+//**********************************************************************************
+// Grid Axes Class
+class Axis{
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // Class Constructor
+    constructor(gridColor){
+        this.gridColor = gridColor;
+    }
+
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // Class Methods
+    // *******************************************************
+    // Renders grid geo
+    draw(orientation){
+        push();
+        strokeWeight(4);
+        stroke(this.gridColor);
+        translate(-gridSize * scalar, -gridSize * scalar, 0);           // X-value used to vary start position
+
+        switch (orientation){
+            case 'x-Axis':
+                //rotateX(radians(90));
+                //translate(0, -(gridSize * scalar * 2) / 2, 0);
+                break;
+            case 'y-Axis':
+                //rotateZ(radians(90));
+                //rotateX(radians(90));
+                //translate(0, -(gridSize * scalar * 2) / 2, 0);
+                break;
+            case 'z-Axis':
+
+            default:
+                break;
+        }
+
+
+            line(0, 0, gridSize * scalar * 2, 0);       // Horizontal Lines
+                                                               // Line spacing varies by passed through parameter
+
+        pop();
+
     }
 }
