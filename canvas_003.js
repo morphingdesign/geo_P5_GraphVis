@@ -32,12 +32,14 @@ var grid = true;        // Boolean to toggle background grid in gui
 var markers = true;     // Boolean to toggle markers in gui
 var geo1 = false;
 var geo2 = true;
+var side_grids = false;  // Boolean to toggle background side grids in gui
 
 // Setup of pseudonyms for ctrl panel labels
 let pointSize;
 let iteration;          // Linked to density variable in gui
 let angle;              // Linked to tilt variable in gui
 let rotAngle;           // Linked to rotation variable in gui
+let sideGrids;          // Linked to side_grids variable in gui
 
 // Color declaration
 let blackSolid, whiteSolid, redSolid, greenSolid, blueSolid, yellowSolid;
@@ -117,7 +119,7 @@ function setup(){
     guiGeo.addGlobals('variation');
 
     // Toggle animation on/off
-    guiGeo.addGlobals('animation', 'grid', 'markers');
+    guiGeo.addGlobals('animation', 'grid', 'side_grids', 'markers');
 
     // Toggle geometries
     guiGeo.addGlobals('geo1', 'geo2');
@@ -172,6 +174,7 @@ function draw() {
     angle = tilt;
     rotAngle = rotation;
     iteration = density;
+    sideGrids = side_grids;
 
     //******************************************************************************
     push();
@@ -184,6 +187,10 @@ function draw() {
     // Scene geometry
     backGrid = new Grid(whiteGrad10, 50);   // Background grid construction and draw
     if(grid) {                  // Condition to display/hide background grid
+        if(sideGrids){
+            backGrid.draw("oneGrid");
+            backGrid.draw("twoGrid");
+        }
         backGrid.draw();
     }
     chladniGeo.draw();          // Geo creation
@@ -305,12 +312,10 @@ class MathGeo {
                 }
 
                 if(geo2){
-                    //n = map(variation, 0, 100, 4, 8);
                     n = map(variation, 0, 100, 50, 500);
                     x = u * cos(v) * scalar;
                     y = u * sin(v) * scalar;
                     z = (0.5 * u * u * sin(2 * v)) / (n  * sin(n)) * scalarZ;
-                    //z = (0.5 * u * u * sin(2 * v) / n  / sin(n)) * scalarZ;
                 }
 
                 // *******************************************************
@@ -381,7 +386,34 @@ class Grid{
     // Class Methods
     // *******************************************************
     // Renders grid geo
-    draw(){
+    draw(orientation){
+        push();
+        strokeWeight(2);
+        stroke(this.gridColor);
+        translate(-gridSize * scalar, -gridSize * scalar, 0);           // X-value used to vary start position
+
+        switch (orientation){
+            case 'oneGrid':
+                rotateX(radians(90));
+                break;
+            case 'twoGrid':
+                rotateZ(radians(90));
+                rotateX(radians(90));
+                break;
+            default:
+                break;
+        }
+
+        for(let i=0; i <= gridSize * scalar * 2; i+=this.spacing){
+            line(0, i, gridSize * scalar * 2, i);       // Horizontal Lines
+        }                                                       // Line spacing varies by passed through parameter
+        for(let i=0; i <= gridSize * scalar * 2; i+=this.spacing){
+            line(i, 0, i, gridSize * scalar * 2);       // Vertical Lines
+        }
+        pop();
+
+        // Original code
+        /**
         push();
         strokeWeight(2);
         stroke(this.gridColor);
@@ -393,6 +425,7 @@ class Grid{
             line(i, 0, i, gridSize * scalar * 2);       // Vertical Lines
         }
         pop();
+        **/
     }
 }
 
