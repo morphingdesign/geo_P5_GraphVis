@@ -21,6 +21,7 @@ let chladniGeo;         // Math geometry, from MathGeo class
 var bgColor = [5, 5, 86];   // Original color [0, 25, 50];
 var ptSize = 1;
 var ptColor = [255, 255, 255];
+var markerColor = [76, 89, 104];
 var density = .5;       // Linked to iteration variable
 var zoom = -500;
 var tilt = 45;          // Linked to angle variable
@@ -28,6 +29,7 @@ var rotation = 0;       // Linked to rotAngle variable
 var variation = 0;
 var animation = true;   // Boolean to toggle anim in gui
 var grid = true;        // Boolean to toggle background grid in gui
+var markers = true;     // Boolean to toggle markers in gui
 
 // Setup of pseudonyms for ctrl panel labels
 let pointSize;
@@ -80,6 +82,8 @@ function setup(){
     colSchOrange = color(254, 37, 45); // Hex val: ('#E9262C');
     colSchRed = color(204, 41, 45);    // Hex val: ('#8C2425');
 
+
+
     //******************************************************************************
     // Initiate geo function
     chladniGeo = new MathGeo();
@@ -92,11 +96,11 @@ function setup(){
     // Set ptSize range
     // Include ptColor to adjust point color
     sliderRange(1, 10, 1);
-    guiStyle.addGlobals('ptSize', 'ptColor');
+    guiStyle.addGlobals('ptSize');
 
     // Set bgColor
-    sliderRange(0, 255, 1);
-    guiStyle.addGlobals('bgColor');
+    //sliderRange(0, 255, 1);
+    guiStyle.addGlobals('ptColor', 'bgColor', 'markerColor');
 
     //******************************************************************************
     // Initialize GUI for geometry parameter controls
@@ -111,7 +115,7 @@ function setup(){
     guiGeo.addGlobals('variation');
 
     // Toggle animation on/off
-    guiGeo.addGlobals('animation', 'grid');
+    guiGeo.addGlobals('animation', 'grid', 'markers');
 
     //******************************************************************************
     // Initialize GUI for viewport controls
@@ -332,15 +336,17 @@ class MathGeo {
 
         // *******************************************************
         // Iteratively go through each array point and isolate those that meet maxZVal condition
-        for(let i = 0; i < geoPts.length; i++){
-            if(geoPts[i].z >= maxZVal - bufferRange){       // If pt above or equal to maxZVal, then add marker
-                //print("[" + i + "]= " + geoPts[i].z);     // Used for debug
-                stroke(colSchGrey);                        // The following line and point create the marker
-                strokeWeight(1);                            // .... for the given point
-                line(geoPts[i].x, geoPts[i].y, geoPts[i].z, geoPts[i].x, geoPts[i].y, geoPts[i].z + lineExtend);
-                strokeWeight(5);
-                point(geoPts[i].x, geoPts[i].y, geoPts[i].z + lineExtend);
-                //point(geoPts[i].x, geoPts[i].y, geoPts[i].z); // Used for debug
+        if(markers) {
+            for (let i = 0; i < geoPts.length; i++) {
+                if (geoPts[i].z >= maxZVal - bufferRange) {       // If pt above or equal to maxZVal, then add marker
+                    //print("[" + i + "]= " + geoPts[i].z);     // Used for debug
+                    stroke(markerColor);                        // The following line and point create the marker
+                    strokeWeight(1);                            // .... for the given point
+                    line(geoPts[i].x, geoPts[i].y, geoPts[i].z, geoPts[i].x, geoPts[i].y, geoPts[i].z + lineExtend);
+                    strokeWeight(5);
+                    point(geoPts[i].x, geoPts[i].y, geoPts[i].z + lineExtend);
+                    //point(geoPts[i].x, geoPts[i].y, geoPts[i].z); // Used for debug
+                }
             }
         }
     }
