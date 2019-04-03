@@ -30,10 +30,9 @@ var seed = 0;
 var animation = true;   // Boolean to toggle anim in gui
 var grid = true;        // Boolean to toggle background grid in gui
 var markers = true;     // Boolean to toggle markers in gui
-var geo1 = false;
-var geo2 = true;
 var side_grids = false;  // Boolean to toggle background side grids in gui
 var amplitude = 20;      // Linked to scalarZ variable
+var geometry = ['geo1', 'geo2'];    // Array for drop-down geo selection menu
 
 // Setup of pseudonyms for ctrl panel labels
 let pointSize;
@@ -112,7 +111,10 @@ function setup(){
     // Initialize GUI for geometry parameter controls
     guiGeo = createGui('Geometry Control Panel (Double-click menu to expand/collapse', 230, 20);
 
-    // Set geo seed / seed
+    // Select geometry
+    guiGeo.addGlobals('geometry');
+
+    // Set geo seed
     sliderRange(0.0, 100.0, 0.1);
     guiGeo.addGlobals('seed');
 
@@ -124,11 +126,8 @@ function setup(){
     sliderRange(0.15, 0.5, 0.01);
     guiGeo.addGlobals('density');
 
-    // Toggle animation on/off
-    guiGeo.addGlobals('animation', 'grid', 'side_grids', 'markers');
-
-    // Toggle geometries
-    guiGeo.addGlobals('geo1', 'geo2');
+    // Toggle animation on/off and marker visibility
+    guiGeo.addGlobals('animation', 'markers');
 
     //******************************************************************************
     // Initialize GUI for viewport controls
@@ -146,6 +145,8 @@ function setup(){
     sliderRange(0, 360, 1);
     guiViewport.addGlobals('rotation');
 
+    // Toggle grid visibility
+    guiViewport.addGlobals('grid', 'side_grids');
 
 }
 
@@ -296,36 +297,44 @@ class MathGeo {
         for (u = -gridSize; u <= gridSize; u += iteration) {
             for (v = -gridSize; v <= gridSize; v += iteration) {
 
-                // *******************************************************
-                // The following are variables & formulas for chladni patterns
-                // Static Values
-                /**
-                 a = 4.14;
-                 b = 7.96;
-                 m = a;
-                 n = b;
-                 **/
 
-                if(geo1) {
-                    // Dynamic values
-                    a = map(seed, 0, 100, 4, 8);
-                    b = map(seed, 0, 100, 4, 8);
-                    m = map(seed, 0, 100, 4, 8);
-                    n = map(seed, 0, 100, 4, 8);
-                    // Create x, y, z values from formulas
-                    x = u * scalar;
-                    y = v * scalar;
-                    z = a * sin(PI * n * x) * sin(PI * m * y) + b * sin(PI * m * x) * sin(PI * n * y) * scalarZ;
-                }
+                switch(geometry){
+                    case 'geo1':
+                        // *******************************************************
+                        // The following are variables & formulas for chladni patterns
+                        // Static Values
+                        /**
+                         a = 4.14;
+                         b = 7.96;
+                         m = a;
+                         n = b;
+                         **/
 
-                // *******************************************************
-                // The following are variables & formulas for hyperbolic paraboloid patterns
-                // Source: Krivoshapko, S.N., "Encyclopedia of Analytical Surfaces", pg. 80
-                if(geo2){
-                    n = map(seed, 0, 100, 50, 500);
-                    x = u * cos(v) * scalar;
-                    y = u * sin(v) * scalar;
-                    z = (0.5 * u * u * sin(2 * v)) / (n  * sin(n)) * scalarZ;
+                        // Dynamic values
+                        a = map(seed, 0, 100, 4, 8);
+                        b = map(seed, 0, 100, 4, 8);
+                        m = map(seed, 0, 100, 4, 8);
+                        n = map(seed, 0, 100, 4, 8);
+                        // Create x, y, z values from formulas
+                        x = u * scalar;
+                        y = v * scalar;
+                        z = a * sin(PI * n * x) * sin(PI * m * y) + b * sin(PI * m * x) * sin(PI * n * y) * scalarZ;
+
+                        break;
+
+                    case 'geo2':
+                        // *******************************************************
+                        // The following are variables & formulas for hyperbolic paraboloid patterns
+                        // Source: Krivoshapko, S.N., "Encyclopedia of Analytical Surfaces", pg. 80
+                        n = map(seed, 0, 100, 50, 500);
+                        x = u * cos(v) * scalar;
+                        y = u * sin(v) * scalar;
+                        z = (0.5 * u * u * sin(2 * v)) / (n  * sin(n)) * scalarZ;
+
+                        break;
+
+                    default:
+                        break;
                 }
 
                 // *******************************************************
