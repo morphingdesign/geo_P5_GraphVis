@@ -233,7 +233,7 @@ function windowResized() {
 //**********************************************************************************
 // Initiates actions for when the mouse button is pressed
 function mousePressed(){
-    if(overGeo){
+    if(overGeo && mouseButton === LEFT){    // Condition requires left mouse press only
         overLocked = true;
         //print("overGeo & mouse pressed & overLocked");              // Used for debug
     }
