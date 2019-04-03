@@ -3,13 +3,13 @@
 // Declare variables
 let x, y, z, a, b, n, m, u, v;
 let scalar = 50;
-let scalarZ = 20;
+//let scalarZ = 20;
 let counter = 0;
 let gridSize = 15;
 
 // GUI element from p5 GUI library
 let guiStyle;           // GUI for managing geo styles (color, point size, etc.)
-let guiGeo;             // GUI for managing geo parameters (density, variation, etc.)
+let guiGeo;             // GUI for managing geo parameters (density, seed, etc.)
 let guiViewport;        // GUI for managing viewport controls (zoom, rotate, etc.)
 
 // In-file classes for geometry
@@ -26,13 +26,14 @@ var density = .5;       // Linked to iteration variable
 var zoom = -500;
 var tilt = 45;          // Linked to angle variable
 var rotation = 0;       // Linked to rotAngle variable
-var variation = 0;
+var seed = 0;
 var animation = true;   // Boolean to toggle anim in gui
 var grid = true;        // Boolean to toggle background grid in gui
 var markers = true;     // Boolean to toggle markers in gui
 var geo1 = false;
 var geo2 = true;
 var side_grids = false;  // Boolean to toggle background side grids in gui
+var amplitude = 20;      // Linked to scalarZ variable
 
 // Setup of pseudonyms for ctrl panel labels
 let pointSize;
@@ -40,6 +41,7 @@ let iteration;          // Linked to density variable in gui
 let angle;              // Linked to tilt variable in gui
 let rotAngle;           // Linked to rotation variable in gui
 let sideGrids;          // Linked to side_grids variable in gui
+let scalarZ;
 
 // Color declaration
 let blackSolid, whiteSolid, redSolid, greenSolid, blueSolid, yellowSolid;
@@ -110,13 +112,17 @@ function setup(){
     // Initialize GUI for geometry parameter controls
     guiGeo = createGui('Geometry Control Panel (Double-click menu to expand/collapse', 230, 20);
 
+    // Set geo seed / seed
+    sliderRange(0.0, 100.0, 0.1);
+    guiGeo.addGlobals('seed');
+
+    // Set geo amplitude
+    sliderRange(1.0, 40.0, 1.0);
+    guiGeo.addGlobals('amplitude');
+
     // Set point density
     sliderRange(0.15, 0.5, 0.01);
     guiGeo.addGlobals('density');
-
-    // Set speed range
-    sliderRange(0.0, 100.0, 0.1);
-    guiGeo.addGlobals('variation');
 
     // Toggle animation on/off
     guiGeo.addGlobals('animation', 'grid', 'side_grids', 'markers');
@@ -175,6 +181,7 @@ function draw() {
     rotAngle = rotation;
     iteration = density;
     sideGrids = side_grids;
+    scalarZ = amplitude;
 
     //******************************************************************************
     push();
@@ -194,8 +201,8 @@ function draw() {
         backGrid.draw();
     }
     chladniGeo.draw();          // Geo creation
-    if(animation) {             // Animate chladni variation iteratively through draw()
-        variation += 0.001;
+    if(animation) {             // Animate chladni seed iteratively through draw()
+        seed += 0.001;
     }
     pop();
 
@@ -301,18 +308,21 @@ class MathGeo {
 
                 if(geo1) {
                     // Dynamic values
-                    a = map(variation, 0, 100, 4, 8);
-                    b = map(variation, 0, 100, 4, 8);
-                    m = map(variation, 0, 100, 4, 8);
-                    n = map(variation, 0, 100, 4, 8);
+                    a = map(seed, 0, 100, 4, 8);
+                    b = map(seed, 0, 100, 4, 8);
+                    m = map(seed, 0, 100, 4, 8);
+                    n = map(seed, 0, 100, 4, 8);
                     // Create x, y, z values from formulas
                     x = u * scalar;
                     y = v * scalar;
                     z = a * sin(PI * n * x) * sin(PI * m * y) + b * sin(PI * m * x) * sin(PI * n * y) * scalarZ;
                 }
 
+                // *******************************************************
+                // The following are variables & formulas for hyperbolic paraboloid patterns
+                // Source: Krivoshapko, S.N., "Encyclopedia of Analytical Surfaces", pg. 80
                 if(geo2){
-                    n = map(variation, 0, 100, 50, 500);
+                    n = map(seed, 0, 100, 50, 500);
                     x = u * cos(v) * scalar;
                     y = u * sin(v) * scalar;
                     z = (0.5 * u * u * sin(2 * v)) / (n  * sin(n)) * scalarZ;
@@ -395,10 +405,12 @@ class Grid{
         switch (orientation){
             case 'oneGrid':
                 rotateX(radians(90));
+                translate(0, -(gridSize * scalar * 2) / 2, 0);
                 break;
             case 'twoGrid':
                 rotateZ(radians(90));
                 rotateX(radians(90));
+                translate(0, -(gridSize * scalar * 2) / 2, 0);
                 break;
             default:
                 break;
@@ -412,20 +424,6 @@ class Grid{
         }
         pop();
 
-        // Original code
-        /**
-        push();
-        strokeWeight(2);
-        stroke(this.gridColor);
-        translate(-gridSize * scalar, -gridSize * scalar, 0);           // X-value used to vary start position
-        for(let i=0; i <= gridSize * scalar * 2; i+=this.spacing){
-            line(0, i, gridSize * scalar * 2, i);       // Horizontal Lines
-        }                                                       // Line spacing varies by passed through parameter
-        for(let i=0; i <= gridSize * scalar * 2; i+=this.spacing){
-            line(i, 0, i, gridSize * scalar * 2);       // Vertical Lines
-        }
-        pop();
-        **/
     }
 }
 
