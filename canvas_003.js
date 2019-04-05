@@ -15,6 +15,7 @@ let guiViewport;        // GUI for managing viewport controls (zoom, rotate, etc
 // In-file classes for geometry
 let backGrid;           // Background grid, from Grid class
 let gridAxis;           // Grid axes, from Axis class
+let axisMarker;        // Axis markers, from AxisMarker class
 let chladniGeo;         // Math geometry, from MathGeo class
 
 // GUI library requires the use of 'var' to define variables, and not 'let'
@@ -34,7 +35,7 @@ var seed = 0;
 var animation = true;   // Boolean to toggle anim in gui
 var grid = true;        // Boolean to toggle background grid in gui
 var markers = false;     // Boolean to toggle markers in gui
-var side_grids = false; // Boolean to toggle background side grids in gui
+var side_grids = true; // Boolean to toggle background side grids in gui
 var axes = true;        // Boolean to toggle axes in gui;
 var amplitude = 20;     // Linked to scalarZ variable
 var geometry = ['geo1', 'geo2', 'geo3'];    // Array for drop-down geo selection menu
@@ -91,10 +92,13 @@ function setup(){
     yellowSolid = color(255, 255, 0);
 
     colSchWhite = color(239, 254, 232);  // Hex val: ('#F1F7ED');
-    colSchGrey = color(76, 89, 104);   // Hex val: ('#212529');
-    colSchBlue = color(5, 5, 86);   // Hex val: ('#050517');
-    colSchOrange = color(254, 37, 45); // Hex val: ('#E9262C');
-    colSchRed = color(204, 41, 45);    // Hex val: ('#8C2425');
+    colSchGrey = color(76, 89, 104);    // Hex val: ('#212529');
+    colSchBlue = color(5, 5, 86);       // Hex val: ('#050517');
+    colSchOrange = color(254, 37, 45);  // Hex val: ('#E9262C');
+    colSchRed = color(204, 41, 45);     // Hex val: ('#8C2425');
+
+
+    axisMarker = new AxisMarker();     // Axis marker constructor
 
     //******************************************************************************
     // Initiate geo function
@@ -119,7 +123,7 @@ function setup(){
 
     //******************************************************************************
     // Initialize GUI for geometry parameter controls
-    guiGeo = createGui('Geometry Control Panel (Double-click menu to expand/collapse', 230, 20);
+    guiGeo = createGui('Geometry Control Panel (Double-click menu to expand/collapse', 20, 340);
 
     // Select geometry
     guiGeo.addGlobals('geometry');
@@ -141,7 +145,7 @@ function setup(){
 
     //******************************************************************************
     // Initialize GUI for viewport controls
-    guiViewport = createGui('Viewport Control Panel (Double-click menu to expand/collapse', 440, 20);
+    guiViewport = createGui('Viewport Control Panel (Double-click menu to expand/collapse', 20, 630);
 
     // Set zoom, or z-depth
     sliderRange(-1000, 500, 1);
@@ -168,10 +172,10 @@ function draw() {
 
     //******************************************************************************
     // Evaluate mouse controls
-    geoX = windowWidth / 2;
+    geoX = windowWidth / 2 + 100;           // Adjusts the mouse hot zone by shifting to right
     geoY = windowHeight / 2;
-    geoXSize = gridSize * scalar / 2;
-    geoYSize = gridSize * scalar / 2;
+    geoXSize = gridSize * scalar * 0.75;
+    geoYSize = gridSize * scalar * 0.75;
 
     if(
         mouseX > geoX - geoXSize &&
@@ -221,6 +225,11 @@ function draw() {
         gridAxis.draw('y-Axis');
         gridAxis.draw('z-Axis');
     }
+
+
+    axisMarker.draw('x-Axis');
+    axisMarker.draw('y-Axis');
+    axisMarker.draw('z-Axis');
 
 
     chladniGeo.draw();          // Geo creation
@@ -568,6 +577,46 @@ class Axis {
         }
 
         line(0, 0, gridSize * scalar * 2, 0);    // Line spacing varies by passed through parameter
+        pop();
+    }
+}
+
+//**********************************************************************************
+// Grid Axes Class
+class AxisMarker {
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // Class Constructor
+    constructor(){
+    }
+
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // Class Methods
+    // *******************************************************
+    // Renders axis marker
+    draw(orientation){
+        push();
+        noStroke();
+        fill(yellowSolid);
+
+        switch (orientation){
+            case 'x-Axis':
+                translate(-gridSize * scalar, 0, 0);           // Alignment with x-axis
+                break;
+            case 'y-Axis':
+                rotateZ(radians(90));
+                translate(-gridSize * scalar, 0, 0);           // Alignment with y-axis
+                break;
+            case 'z-Axis':
+                translate(-gridSize * scalar, -gridSize * scalar, 0);           // Alignment with z-axis
+                break;
+            default:
+                break;
+        }
+
+        box(10, 10, 10);
+
+        stroke(yellowSolid);
+        line(0, 0, gridSize * scalar * 2, 0);    // Used to debug
         pop();
     }
 }
