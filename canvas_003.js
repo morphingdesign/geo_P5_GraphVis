@@ -33,11 +33,11 @@ var rotation = 0;       // Linked to rotAngle variable
 var seed = 0;
 var animation = true;   // Boolean to toggle anim in gui
 var grid = true;        // Boolean to toggle background grid in gui
-var markers = true;     // Boolean to toggle markers in gui
+var markers = false;     // Boolean to toggle markers in gui
 var side_grids = false; // Boolean to toggle background side grids in gui
 var axes = true;        // Boolean to toggle axes in gui;
 var amplitude = 20;     // Linked to scalarZ variable
-var geometry = ['geo1', 'geo2'];    // Array for drop-down geo selection menu
+var geometry = ['geo1', 'geo2', 'geo3'];    // Array for drop-down geo selection menu
 
 // Setup of pseudonyms for ctrl panel labels
 let pointSize;
@@ -381,6 +381,17 @@ class MathGeo {
                         x = u * cos(v) * scalar;
                         y = u * sin(v) * scalar;
                         z = (0.5 * u * u * sin(2 * v)) / (n  * sin(n)) * scalarZ;
+
+                        break;
+
+                    case 'geo3':
+                        // *******************************************************
+                        // The following are variables & formulas for tranguloid trefoil
+                        // Source:
+                        n = map(seed, 0, 100, 1, 4);
+                        x = (2 * sin(3 * u) / (2 + cos(v))) * scalar * 4 / n;
+                        y = (2 * (sin(u) + 2 * sin(2 * u)) / (2 + cos(v + 2 * PI / 3))) * scalar * 2 / n;
+                        z = ((cos(u) - 2 * cos(2 * u)) * (2 + cos(v)) * (2 + cos(v + 2 * PI / 3))) * (scalarZ / n);
 
                         break;
 
