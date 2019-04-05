@@ -36,7 +36,8 @@ var animation = true;   // Boolean to toggle anim in gui
 var grid = true;        // Boolean to toggle background grid in gui
 var markers = false;     // Boolean to toggle markers in gui
 var side_grids = true; // Boolean to toggle background side grids in gui
-var axes = true;        // Boolean to toggle axes in gui;
+var axes = true;        // Boolean to toggle axes in gui
+var axes_markers = false;   // Boolean to toggle axes markers
 var amplitude = 20;     // Linked to scalarZ variable
 var geometry = ['geo1', 'geo2', 'geo3'];    // Array for drop-down geo selection menu
 
@@ -160,7 +161,7 @@ function setup(){
     guiViewport.addGlobals('rotation');
 
     // Toggle grid visibility
-    guiViewport.addGlobals('grid', 'side_grids', 'axes');
+    guiViewport.addGlobals('grid', 'side_grids', 'axes', 'axes_markers');
 
 }
 
@@ -226,10 +227,12 @@ function draw() {
         gridAxis.draw('z-Axis');
     }
 
+    if(axes_markers){
+        axisMarker.draw('x-Axis');
+        axisMarker.draw('y-Axis');
+        //axisMarker.draw('z-Axis');
+    }
 
-    axisMarker.draw('x-Axis');
-    axisMarker.draw('y-Axis');
-    axisMarker.draw('z-Axis');
 
 
     chladniGeo.draw();          // Geo creation
@@ -617,6 +620,8 @@ class AxisMarker {
 
         stroke(yellowSolid);
         line(0, 0, gridSize * scalar * 2, 0);    // Used to debug
+        rotateX(radians(90));
+        line(0, -gridSize * scalar, 0, gridSize * scalar);    // Used to debug
         pop();
     }
 }
