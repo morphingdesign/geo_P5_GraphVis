@@ -585,7 +585,8 @@ class Axis {
 }
 
 //**********************************************************************************
-// Grid Axes Class
+// Axes Markers Class
+// Axes coordinated with the right-handed coordinate system
 class AxisMarker {
     // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     // Class Constructor
