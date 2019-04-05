@@ -21,8 +21,6 @@ let chladniGeo;         // Math geometry, from MathGeo class
 //var bgColor = [0, 25, 50];         // Dark blue color
 var bgColor = [5, 5, 86];   // Original color [0, 25, 50];
 var ptSize = 1;
-var positive_pt_color = [204, 41, 45];
-var negative_pt_color = [239, 254, 232];
 var markerColor = [76, 89, 104];
 var density = .5;       // Linked to iteration variable
 var zoom = -500;
@@ -52,8 +50,6 @@ let scalarZ;
 // Color declaration
 let blackSolid, whiteSolid, redSolid, greenSolid, blueSolid, yellowSolid;
 let colSchWhite, colSchGrey, colSchBlue, colSchOrange, colSchRed;
-let colPosPt;
-let colNegPt;
 let whiteGrad10, whiteGrad50;
 
 // Mouse controls
@@ -98,9 +94,6 @@ function setup(){
     colSchOrange = color(254, 37, 45); // Hex val: ('#E9262C');
     colSchRed = color(204, 41, 45);    // Hex val: ('#8C2425');
 
-    colPosPt = (204, 41, 45);
-    colNegPt = (239, 254, 232);
-
     //******************************************************************************
     // Initiate geo function
     chladniGeo = new MathGeo();
@@ -120,7 +113,7 @@ function setup(){
 
     // Set bgColor
     //sliderRange(0, 255, 1);
-    guiStyle.addGlobals('positive_pt_color', 'negative_pt_color', 'markerColor');
+    guiStyle.addGlobals('ptColor', 'negative_pt_color', 'markerColor');
 
     //******************************************************************************
     // Initialize GUI for geometry parameter controls
@@ -200,9 +193,6 @@ function draw() {
     iteration = density;
     sideGrids = side_grids;
     scalarZ = amplitude;
-
-    colPosPt = positive_pt_color;
-    colNegPt = negative_pt_color;
 
     //******************************************************************************
     push();
@@ -348,17 +338,12 @@ class MathGeo {
         let geoPts = [];
         let counter = 0;
 
-        //let gradientZColor = new Gradient(colSchWhite, colSchOrange);
-
-        //let gradientZColor = new Gradient(negative_pt_color, positive_pt_color);
-
-
-        //let gradientZColor = new Gradient(colNegPt, colPosPt);
+        let gradientZColor = new Gradient(colSchWhite, colSchOrange);
 
         push();
         noFill();
         //stroke(ptColor);
-        stroke(positive_pt_color);
+        //stroke(positive_pt_color);
         strokeWeight(ptSize);
         for (u = -gridSize; u <= gridSize; u += iteration) {
             for (v = -gridSize; v <= gridSize; v += iteration) {
@@ -410,8 +395,8 @@ class MathGeo {
 
                 // *******************************************************
                 // Apply gradient color to stroke and generate points using array values
-                //let gradZColor = gradientZColor.returnGrad(z, -1.0, 1.0);
-                //stroke(gradZColor);
+                let gradZColor = gradientZColor.returnGrad(z, -1.0, 1.0);
+                stroke(gradZColor);
                 point(geoPts[counter].x, geoPts[counter].y, geoPts[counter].z);
                 counter++;
                 //print(counter);                               // Used for debug
