@@ -27,8 +27,8 @@ var density = .5;       // Linked to iteration variable
 var zoom = -500;
 var tilt = 45;          // Linked to angle variable
 var rotation = 0;       // Linked to rotAngle variable
-var panX = 0;           // Linked to panViewX variable
-var panY = 0;           // Linked to panViewY variable
+//var panX = 0;           // Linked to panViewX variable        // Not used
+//var panY = 0;           // Linked to panViewY variable        // Not used
 var seed = 0;
 var animation = true;   // Boolean to toggle anim in gui
 var grid = true;        // Boolean to toggle background grid in gui
@@ -43,8 +43,8 @@ let pointSize;
 let iteration;          // Linked to density variable in gui
 let angle;              // Linked to tilt variable in gui
 let rotAngle;           // Linked to rotation variable in gui
-let panViewX;           // Linked to panX variable in gui
-let panViewY;           // Linked to panY variable in gui
+//let panViewX;           // Linked to panX variable in gui     // Not used
+//let panViewY;           // Linked to panY variable in gui     // Not used
 let sideGrids;          // Linked to side_grids variable in gui
 let scalarZ;
 
@@ -59,7 +59,7 @@ let overGeo = false;         // Bool for mouse over geo
 let overLockRot = false;     // Bool to retain mouse pos over geo
 let overLockPan = false;
 let dragSpeed = 5.0;         // Multiplier for mouse drag motion
-let panSpeed = 30.0;         // Multiplier for mouse pan motion
+//let panSpeed = 30.0;       // Multiplier for mouse pan motion  // Not used
 
 // Display variables
 // This has to be included in the Setup Canvas & windowResized() function
@@ -188,14 +188,12 @@ function draw() {
     // Re-associate control variable names with gui variables
     angle = tilt;
     rotAngle = rotation;
-    panViewX = panX;
-    panViewY = panY;
+    //panViewX = panX;          // Not used
+    //panViewY = panY;          // Not used
     iteration = density;
     sideGrids = side_grids;
     scalarZ = amplitude;
 
-    push();
-    translate(panViewX, panViewY, 0);
     //******************************************************************************
     push();
     //translate(0, 0, zoom);  // Centralize location of geo in canvas
@@ -227,8 +225,6 @@ function draw() {
     if(animation) {             // Animate chladni seed iteratively through draw()
         seed += 0.001;
     }
-    pop();
-
     pop();
 }
 
@@ -283,8 +279,8 @@ function mouseDragged(){
         //print("mouse dragged down");      // Used for debug
     }
 
-    // Pan Controls
-
+    // Pan Controls                         // Not used
+    /**
     if(overLockPan && mouseX > pmouseX){
         panX+=panSpeed;
         print("mouse panned to right");  // Used for debug
@@ -303,6 +299,7 @@ function mouseDragged(){
         panY-=panSpeed;
         print("mouse panned down");  // Used for debug
     }
+     **/
 }
 
 //**********************************************************************************
