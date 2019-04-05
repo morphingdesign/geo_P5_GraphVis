@@ -21,6 +21,8 @@ let chladniGeo;         // Math geometry, from MathGeo class
 //var bgColor = [0, 25, 50];         // Dark blue color
 var bgColor = [5, 5, 86];   // Original color [0, 25, 50];
 var ptSize = 1;
+var point_color = [254, 37, 45];
+var pointGradient = false;
 var markerColor = [76, 89, 104];
 var density = .5;       // Linked to iteration variable
 var zoom = -500;
@@ -113,7 +115,7 @@ function setup(){
 
     // Set bgColor
     //sliderRange(0, 255, 1);
-    guiStyle.addGlobals('ptColor', 'negative_pt_color', 'markerColor');
+    guiStyle.addGlobals('ptColor', 'point_color', 'pointGradient', 'markerColor', 'markers');
 
     //******************************************************************************
     // Initialize GUI for geometry parameter controls
@@ -135,7 +137,7 @@ function setup(){
     guiGeo.addGlobals('density');
 
     // Toggle animation on/off and marker visibility
-    guiGeo.addGlobals('animation', 'markers');
+    guiGeo.addGlobals('animation');
 
     //******************************************************************************
     // Initialize GUI for viewport controls
@@ -342,8 +344,6 @@ class MathGeo {
 
         push();
         noFill();
-        //stroke(ptColor);
-        //stroke(positive_pt_color);
         strokeWeight(ptSize);
         for (u = -gridSize; u <= gridSize; u += iteration) {
             for (v = -gridSize; v <= gridSize; v += iteration) {
@@ -396,7 +396,14 @@ class MathGeo {
                 // *******************************************************
                 // Apply gradient color to stroke and generate points using array values
                 let gradZColor = gradientZColor.returnGrad(z, -1.0, 1.0);
-                stroke(gradZColor);
+
+                if(pointGradient){
+                    stroke(gradZColor);
+                }
+                else{
+                    stroke(point_color);
+                }
+
                 point(geoPts[counter].x, geoPts[counter].y, geoPts[counter].z);
                 counter++;
                 //print(counter);                               // Used for debug
