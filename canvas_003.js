@@ -24,7 +24,8 @@ var bgColor = [5, 5, 86];   // Original color [0, 25, 50];
 var ptSize = 1;
 var point_color = [254, 37, 45];
 var pointGradient = false;
-var markerColor = [76, 89, 104];
+var markerColor = [76, 89, 104];    // Color of marker rod
+var markerPtColor = [0, 0, 255];    // Color of marker end pt
 var density = .5;       // Linked to iteration variable
 var zoom = -500;
 var tilt = 45;          // Linked to angle variable
@@ -123,11 +124,11 @@ function setup(){
 
     // Set bgColor
     //sliderRange(0, 255, 1);
-    guiStyle.addGlobals('ptColor', 'point_color', 'pointGradient', 'markerColor', 'markers');
+    guiStyle.addGlobals('ptColor', 'point_color', 'pointGradient', 'markerPtColor', 'markerColor', 'markers');
 
     //******************************************************************************
     // Initialize GUI for geometry parameter controls
-    guiGeo = createGui('Geometry Control Panel (Double-click menu to expand/collapse', 20, 340);
+    guiGeo = createGui('Geometry Control Panel (Double-click menu to expand/collapse', 20, 390);
 
     // Select geometry
     guiGeo.addGlobals('geometry');
@@ -152,7 +153,7 @@ function setup(){
 
     //******************************************************************************
     // Initialize GUI for viewport controls
-    guiViewport = createGui('Viewport Control Panel (Double-click menu to expand/collapse', 20, 720);
+    guiViewport = createGui('Viewport Control Panel (Double-click menu to expand/collapse', 20, 770);
 
     // Set zoom, or z-depth
     sliderRange(-1000, 500, 1);
@@ -485,6 +486,7 @@ class MathGeo {
                     stroke(markerColor);                        // The following line and point create the marker
                     strokeWeight(1);                            // .... for the given point
                     line(geoPts[i].x, geoPts[i].y, geoPts[i].z, geoPts[i].x, geoPts[i].y, geoPts[i].z + lineExtend);
+                    stroke(markerPtColor);
                     strokeWeight(5);
                     point(geoPts[i].x, geoPts[i].y, geoPts[i].z + lineExtend);
                     //point(geoPts[i].x, geoPts[i].y, geoPts[i].z); // Used for debug
