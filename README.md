@@ -1,12 +1,14 @@
 # p5_sandbox_001
 p5.js Exploration
 <br />
+<hr />
 <br />
-Web link demonstrating active operation: https://morphingdesign.com/process/sandbox003/index_003.html
+This project is an exploration of analytical surface visualizations using P5.js and the accompanying p5.gui library for the geometry and grid control panels in the GUI.  The following web link demonstrates its active operation with control panel parameters that can be adjusted:
+https://morphingdesign.com/process/sandbox003/index_003.html
 <br />
+<hr />
 <br />
 Program Screen Captures:
-<br />
 <br />
 ![Screen Capture](../master/img/screenCap000.PNG)
 <br />
