@@ -29,6 +29,9 @@ var density = .5;       // Linked to iteration variable
 var zoom = -500;
 var tilt = 45;          // Linked to angle variable
 var rotation = 0;       // Linked to rotAngle variable
+var point_vis = true;     // Boolean to toggle main geo point visibility in gui
+var point_X_Vis = false;  // Boolean to toggle X plane geo point visibility in gui
+var point_Y_Vis = false;  // Boolean to toggle Y plane geo point visibility in gui
 //var panX = 0;           // Linked to panViewX variable        // Not used
 //var panY = 0;           // Linked to panViewY variable        // Not used
 var seed = 0;
@@ -144,9 +147,12 @@ function setup(){
     // Toggle animation on/off and marker visibility
     guiGeo.addGlobals('animation');
 
+    // Toggle point visibility
+    guiGeo.addGlobals('point_vis', 'point_X_Vis', 'point_Y_Vis');
+
     //******************************************************************************
     // Initialize GUI for viewport controls
-    guiViewport = createGui('Viewport Control Panel (Double-click menu to expand/collapse', 20, 630);
+    guiViewport = createGui('Viewport Control Panel (Double-click menu to expand/collapse', 20, 720);
 
     // Set zoom, or z-depth
     sliderRange(-1000, 500, 1);
@@ -350,6 +356,7 @@ class MathGeo {
     draw() {
 
         let geoPts = [];
+        //let geoPtsX = [];
         let counter = 0;
 
         let gradientZColor = new Gradient(colSchWhite, colSchOrange);
@@ -416,6 +423,8 @@ class MathGeo {
                 geoPts[counter] = createVector(x, y, z);
                 //print(geoPts[counter]);                       // Used for debug
 
+                //geoPtsX[counter] = createVector(0, y, z);
+
                 // *******************************************************
                 // Apply gradient color to stroke and generate points using array values
                 let gradZColor = gradientZColor.returnGrad(z, -1.0, 1.0);
@@ -427,7 +436,20 @@ class MathGeo {
                     stroke(point_color);
                 }
 
-                point(geoPts[counter].x, geoPts[counter].y, geoPts[counter].z);
+                if(point_vis) {
+                    point(geoPts[counter].x, geoPts[counter].y, geoPts[counter].z);
+                }
+
+                if(point_Y_Vis) {
+                    stroke(redSolid);
+                    point(-gridSize * scalar, geoPts[counter].y, geoPts[counter].z);
+                }
+
+                if(point_X_Vis) {
+                    stroke(greenSolid);
+                    point(geoPts[counter].x, -gridSize * scalar, geoPts[counter].z);
+                }
+
                 counter++;
                 //print(counter);                               // Used for debug
             }
