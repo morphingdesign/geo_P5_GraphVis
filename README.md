@@ -11,6 +11,9 @@ Program Screen Captures:
 ![Screen Capture](../master/img/screenCap000.PNG)
 <br />
 <br />
+![Control Panel Screen Capture](../master/img/screenCap006.PNG)
+<br />
+<br />
 ![Screen Capture](../master/img/screenCap001.PNG)
 <br />
 <br />
