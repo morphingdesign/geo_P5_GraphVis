@@ -168,7 +168,10 @@ function setup(){
     guiViewport.addGlobals('rotation');
 
     // Toggle grid visibility
-    guiViewport.addGlobals('grid', 'side_grids', 'axes', 'axes_markers');
+    guiViewport.addGlobals('grid', 'side_grids', 'axes');
+
+    // Toggle grid visibility
+    //guiViewport.addGlobals('axes_markers');
 
 }
 
