@@ -1,4 +1,4 @@
-# p5_sandbox_001
+# geo_P5_GraphVis
 p5.js Exploration
 <br />
 This project is an exploration of analytical surface visualizations using P5.js and the accompanying p5.gui library for the geometry and grid control panels in the GUI.  The following web link demonstrates its active operation with control panel parameters that can be adjusted:
