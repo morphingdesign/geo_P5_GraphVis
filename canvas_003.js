@@ -18,6 +18,9 @@ let gridAxis;           // Grid axes, from Axis class
 let axisMarker;        // Axis markers, from AxisMarker class
 let chladniGeo;         // Math geometry, from MathGeo class
 
+let guideFontRegular;
+let guideFontBold;
+
 // GUI library requires the use of 'var' to define variables, and not 'let'
 //var bgColor = [0, 25, 50];         // Dark blue color
 var bgColor = [5, 5, 86];   // Original color [0, 25, 50];
@@ -76,6 +79,10 @@ let buffer = 20;            // Compensates for bottom and right edges of window
 //##################################################################################
 // Preload function
 function preload(){
+    // Preload fonts, WEBGL requires the use of OTF file formats to
+    // correctly display text
+    guideFontRegular = loadFont('data/Montserrat-Regular.otf');
+    guideFontBold = loadFont('data/Montserrat-Bold.otf');
 }
 
 //##################################################################################
@@ -250,6 +257,24 @@ function draw() {
         seed += 0.001;
     }
     pop();
+
+    // Text Instructions
+    push();
+    translate(windowWidth/2 -210, -windowHeight/2 +20, 0);
+    fill(whiteSolid);
+    textSize(16);
+    textAlign(LEFT, TOP);
+    //rect(0, 0, 200, 50);
+    textFont(guideFontBold);
+    text('ROTATE:', 0, 0);
+    textFont(guideFontRegular);
+    text('Left Mouse', 80, 0);
+    textFont(guideFontBold);
+    text('ZOOM:', 0, 25);
+    textFont(guideFontRegular);
+    text('Mouse Scroll', 80, 25);
+    pop();
+
 }
 
 //##################################################################################
