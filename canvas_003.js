@@ -160,7 +160,7 @@ function setup(){
 
     //******************************************************************************
     // Initialize GUI for viewport controls
-    guiViewport = createGui('Viewport Control Panel (Double-click menu to expand/collapse', 20, 770);
+    guiViewport = createGui('Viewport Control Panel (Double-click menu to expand/collapse', 230, 20);
 
     // Set zoom, or z-depth
     sliderRange(-1000, 500, 1);
@@ -284,7 +284,7 @@ function draw() {
 //**********************************************************************************
 // Dynamically adjust the canvas to the window
 function windowResized() {
-    resizeCanvas(windowWidth - buffer, windowHeight - buffer);
+    resizeCanvas(windowWidth - buffer, windowHeight - buffer, WEBGL);
 }
 
 //**********************************************************************************
