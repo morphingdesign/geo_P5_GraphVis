@@ -16,7 +16,7 @@ let guiViewport;        // GUI for managing viewport controls (zoom, rotate, etc
 let backGrid;           // Background grid, from Grid class
 let gridAxis;           // Grid axes, from Axis class
 let axisMarker;        // Axis markers, from AxisMarker class
-let chladniGeo;         // Math geometry, from MathGeo class
+let mathFormGeo;         // Math geometry, from MathGeo class
 
 let guideFontRegular;
 let guideFontBold;
@@ -46,7 +46,7 @@ var side_grids = true; // Boolean to toggle background side grids in gui
 var axes = true;        // Boolean to toggle axes in gui
 var axes_markers = false;   // Boolean to toggle axes markers
 var amplitude = 20;     // Linked to scalarZ variable
-var geometry = ['geo1', 'geo2', 'geo3'];    // Array for drop-down geo selection menu
+var geometry = ['Chladni Plate', 'Hyperbolic Paraboloid', 'Tranguloid Trefoil'];    // Array for drop-down geo selection menu
 
 // Setup of pseudonyms for ctrl panel labels
 let pointSize;
@@ -114,7 +114,7 @@ function setup(){
 
     //******************************************************************************
     // Initiate geo function
-    chladniGeo = new MathGeo();
+    mathFormGeo = new MathGeo();
 
     //******************************************************************************
     // Initialize GUI for style controls
@@ -252,8 +252,8 @@ function draw() {
 
 
 
-    chladniGeo.draw();          // Geo creation
-    if(animation) {             // Animate chladni seed iteratively through draw()
+    mathFormGeo.draw();          // Geo creation
+    if(animation) {             // Animate math geo seed iteratively through draw()
         seed += 0.001;
     }
     pop();
@@ -398,7 +398,7 @@ class MathGeo {
 
 
                 switch(geometry){
-                    case 'geo1':
+                    case 'Chladni Plate':
                         // *******************************************************
                         // The following are variables & formulas for chladni patterns
                         // Static Values
@@ -421,7 +421,7 @@ class MathGeo {
 
                         break;
 
-                    case 'geo2':
+                    case 'Hyperbolic Paraboloid':
                         // *******************************************************
                         // The following are variables & formulas for hyperbolic paraboloid patterns
                         // Source: Krivoshapko, S.N., "Encyclopedia of Analytical Surfaces", pg. 80
@@ -432,10 +432,10 @@ class MathGeo {
 
                         break;
 
-                    case 'geo3':
+                    case 'Tranguloid Trefoil':
                         // *******************************************************
                         // The following are variables & formulas for tranguloid trefoil
-                        // Source:
+                        // Source: http://www.3d-meier.de/tut3/Seite57.html
                         n = map(seed, 0, 100, 1, 4);
                         x = (2 * sin(3 * u) / (2 + cos(v))) * scalar * 4 / n;
                         y = (2 * (sin(u) + 2 * sin(2 * u)) / (2 + cos(v + 2 * PI / 3))) * scalar * 2 / n;
