@@ -436,7 +436,7 @@ class MathGeo {
                         // *******************************************************
                         // The following are variables & formulas for tranguloid trefoil
                         // Source: http://www.3d-meier.de/tut3/Seite57.html
-                        n = map(seed, 0, 100, 1, 5);
+                        n = map(seed, 0, 100, 1, 3.5);
                         x = (2 * sin(3 * u) / (2 + cos(v))) * scalar * 4 / n;
                         y = (2 * (sin(u) + 2 * sin(2 * u)) / (2 + cos(v + 2 * PI / 3))) * scalar * 2 / n;
                         z = ((cos(u) - 2 * cos(2 * u)) * (2 + cos(v)) * (2 + cos(v + 2 * PI / 3))) * (scalarZ / n);
